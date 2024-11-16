@@ -1,0 +1,9 @@
+= Contributions
+
+include::{root}/pages/appendix/contributions/gabriel_ny_aintsoa_leclerc/index.adoc[leveloffset=+1]
+
+include::{root}/pages/appendix/contributions/karyna_ouahrani/index.adoc[leveloffset=+1]
+
+include::{root}/pages/appendix/contributions/noah_pierre_biewesch/index.adoc[leveloffset=+1]
+
+include::{root}/pages/appendix/contributions/steve_meireles_lopes/index.adoc[leveloffset=+1]

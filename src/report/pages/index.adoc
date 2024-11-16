@@ -1,0 +1,21 @@
+= IoT Project: Room Selection Decision Support System
+Gabriel Ny aintsoa Leclerc; Karyna Ouahrani; Noah Pierre Biewesch; Steve Meireles Lopes
+:revnumber: {docdate}
+:sectnums:
+:toc:
+
+include::{root}/pages/preface/index.adoc[leveloffset=+1]
+
+include::{root}/pages/protocols/index.adoc[leveloffset=+1]
+
+include::{root}/pages/database/index.adoc[leveloffset=+1]
+
+include::{root}/pages/criteria/index.adoc[leveloffset=+1]
+
+include::{root}/pages/algorithm/index.adoc[leveloffset=+1]
+
+include::{root}/pages/rest_apis/index.adoc[leveloffset=+1]
+
+include::{root}/pages/uis/index.adoc[leveloffset=+1]
+
+include::{root}/pages/appendix/index.adoc[leveloffset=+1]
