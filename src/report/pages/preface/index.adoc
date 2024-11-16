@@ -1,0 +1,5 @@
+[preface]
+= Preface
+
+This report details the protocol, database, criteria, algorithm, REST API, and
+UI design choices of the room selection decision support system.
