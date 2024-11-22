@@ -43,31 +43,51 @@
           (
             inputs.flake-utils.lib.eachDefaultSystem (
               _: {
-                packages = {
-                  application-default = pkgs.stdenvNoCC.mkDerivation {
-                    buildPhase = let
-                      out = "${builtins.placeholder "out"}/share/src";
-                    in ''
-                      mkdir --parents ${out}
-                      zip --recurse-paths ${out}/application.zip .
-                    '';
+                packages = lib.fix (
+                  self: {
+                    application-default = pkgs.stdenvNoCC.mkDerivation {
+                      buildPhase = let
+                        out = "${builtins.placeholder "out"}/share/src";
+                      in ''
+                        mkdir --parents ${out}
+                        zip --recurse-paths ${out}/application.zip .
+                      '';
 
-                    name = "application-default";
-                    nativeBuildInputs = [pkgs.zip];
-                    postPatch = "cp ${./LICENSE} LICENSE";
-                    src = src/application;
-                  };
+                      name = "application-default";
+                      nativeBuildInputs = [pkgs.zip];
+                      postPatch = "cp ${./LICENSE} LICENSE";
+                      src = src/application;
+                    };
 
-                  default = pkgs.buildEnv {
-                    name = "default";
+                    application-default-external = self.application-default;
 
-                    paths = lib.attrsets.attrValues (
-                      lib.filterAttrs
-                      (package: _: builtins.match ".*-default" package != null)
-                      inputs.self.packages.${system}
-                    );
-                  };
-                };
+                    default = pkgs.buildEnv {
+                      name = "default";
+
+                      paths = lib.attrsets.attrValues (
+                        lib.filterAttrs
+                        (
+                          package: _:
+                            builtins.match ".*-default" package != null
+                        )
+                        inputs.self.packages.${system}
+                      );
+                    };
+
+                    default-external = pkgs.buildEnv {
+                      name = "default-external";
+
+                      paths = lib.attrsets.attrValues (
+                        lib.filterAttrs
+                        (
+                          package: _:
+                            builtins.match ".*-default-external" package != null
+                        )
+                        inputs.self.packages.${system}
+                      );
+                    };
+                  }
+                );
               }
             )
           )
