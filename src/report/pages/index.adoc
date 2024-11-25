@@ -4,18 +4,18 @@ Gabriel Ny aintsoa Leclerc; Karyna Ouahrani; Noah Pierre Biewesch; Steve Meirele
 :sectnums:
 :toc:
 
-include::{root}/pages/preface/index.adoc[leveloffset=+1]
+include::./preface/index.adoc[leveloffset=+1]
 
-include::{root}/pages/protocols/index.adoc[leveloffset=+1]
+include::./protocols/index.adoc[leveloffset=+1]
 
-include::{root}/pages/database/index.adoc[leveloffset=+1]
+include::./database/index.adoc[leveloffset=+1]
 
-include::{root}/pages/criteria/index.adoc[leveloffset=+1]
+include::./criteria/index.adoc[leveloffset=+1]
 
-include::{root}/pages/algorithm/index.adoc[leveloffset=+1]
+include::./algorithm/index.adoc[leveloffset=+1]
 
-include::{root}/pages/rest_apis/index.adoc[leveloffset=+1]
+include::./rest_apis/index.adoc[leveloffset=+1]
 
-include::{root}/pages/uis/index.adoc[leveloffset=+1]
+include::./uis/index.adoc[leveloffset=+1]
 
-include::{root}/pages/contributions/index.adoc[leveloffset=+1]
+include::./contributions/index.adoc[leveloffset=+1]

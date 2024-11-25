@@ -1,10 +1,10 @@
 [appendix]
 = Contributions
 
-include::{root}/pages/contributions/gabriel_ny_aintsoa_leclerc/index.adoc[leveloffset=+1]
+include::./gabriel_ny_aintsoa_leclerc/index.adoc[leveloffset=+1]
 
-include::{root}/pages/contributions/karyna_ouahrani/index.adoc[leveloffset=+1]
+include::./karyna_ouahrani/index.adoc[leveloffset=+1]
 
-include::{root}/pages/contributions/noah_pierre_biewesch/index.adoc[leveloffset=+1]
+include::./noah_pierre_biewesch/index.adoc[leveloffset=+1]
 
-include::{root}/pages/contributions/steve_meireles_lopes/index.adoc[leveloffset=+1]
+include::./steve_meireles_lopes/index.adoc[leveloffset=+1]
