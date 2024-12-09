@@ -1,0 +1,27 @@
+> *February 3rd - 9:00 - 13:00 [ORAL] Introduction to IOT (MSA 2.390):* You will
+> have a maximum of 15 minutes to present your project, which should include an
+> overview of your organization, your design choices, and a demo (2-3 minutes
+> max for the demo; personal tip for the demo, I strongly recommend preparing a
+> video clip to showcase it. This is optional but can help you optimize your
+> presentation time). This will be followed by a maximum of 5 minutes for
+> questions. I kindly ask all groups to be punctual; any delays will reduce your
+> presentation time. The order of presentations is as follows (check the file
+> [xref:../groups.pdf[`/docs/groups.pdf`]] on Moodle to find your assigned
+> group): PLEASE NOTE that this oral is in addition of the report you have to
+> send me on my personal mailbox: sylvain.kubler@uni.lu, whose deadline is the
+> same as the ORAL date (Feb. 3rd):
+>
+> * Grp1: 9:00 - 9:20
+> * Grp2: 9:20 - 9:40
+> * Grp3: 9:40 - 10:00
+> * Grp4: 10:00 - 10:20
+> * Grp5: 10:20 - 10:40
+> * Grp6: 10:40 - 11:00
+> * Grp7: 11:00 - 11:20
+> * Grp8: 11:20 - 11:40
+> * Grp9: 11:40 - 12:00
+> * Grp10: 12:20 - 12:40
+> * Grp11: 12:40 - 13:00
+>
+> -- Sylvain KUBLER,
+>    https://moodle.uni.lu/mod/forum/discuss.php?d=136149
