@@ -1,1 +1,85 @@
 = Algorithm
+
+Version 1:
+
+ToDo:
+- Explain better
+- add room facility not needed option
+- add TOPSIS if time allows
+
+AHP:
+AHP uses pairwise comparisions to decide an end goal in our case the optimal
+room. To use AHP we first have to choose a set of criteria and a set of alternatives.
+
+Maybe insert image later: 
+
+'''
+Mock image 
+Goal:
+Optimal Room
+|
+Criteria:
+Temperature, Co2 Level, air quality, room facilities
+|
+Sub-Criteria/room facilities:
+Beamer, robotic material, chemical material, ...
+|
+Alternatives:
+Room A, Room B, Room C, Room ...
+'''
+
+Room facilities has several sub-criteria which are facilities that students or
+teachers need in their room.
+
+The goal of AHP is to compare each criteria to each other and each alternative
+to every other alternative for every criteria. To do the comparision we will use 
+this table: (insert image [1])
+
+We decide for the following judgements:
+
+|A          |B            |More important|Intensity|
+|Temperature|Co2 Level    |B             |3        |
+|Temperature|air quality  |B             |5        |
+|Temperature|room facility|B             |9        |
+|Co2 Level  |air quality  |B             |3        |
+|Co2 Level  |room facility|B             |9        |
+|air quality|room facility|B             |5        |
+
+Gives use the matrix:
+|             |Temperature|Co2 Level|air quality|room facility|
+|Temperature  |1          |3        |5          |9            |
+|Co2 Level    |1/3        |1        |3          |9            |
+|air quality  |1/5        |1/3      |1          |5            |
+|room facility|1/9        |1/9      |1/5        |1            |
+
+Example comparision with three rooms:
+Room A (cold tempetarure, bad Co2 Levels   ,  medium air quality, high facility)
+Room B (good temperature, average Co2 Levels, good air quality,   low faciliy)
+Room C (good temperature, good Co2 Levels,    good air quality,   low facility)
+
+|Temperature|Room A|Room B|Room C|
+|Room A     |1     |4     |4     |
+|Room B     |1/4   |1     |1     |
+|Room C     |1/4   |1     |1     |
+
+|Co2 Levels |Room A|Room B|Room C|
+|Room A     |1     |7     |9     |
+|Room B     |1/7   |1     |4     |
+|Room C     |1/9   |1/4   |1     |
+
+|Air quality |Room A|Room B|Room C|
+|Room A      |1     |4     |4     |
+|Room B      |1/4   |1     |1     |
+|Room C      |1/4   |1     |1     |
+
+|Facilities |Room A|Room B|Room C|
+|Room A     |1     |1/7   |1/7   |
+|Room B     |7     |1     |1     |
+|Room C     |7     |1     |1     |
+
+TOPSIS
+
+Combination AHP-TOPSIS
+
+Ressource:
+[1]: https://en.wikipedia.org/wiki/Analytic_hierarchy_process_%E2%80%93_car_example#/media/File:AHPFundamentalScale.png

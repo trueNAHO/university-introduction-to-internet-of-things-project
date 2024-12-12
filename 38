@@ -1,0 +1,22 @@
+
+ID Age  Project Tag     Description                                   Urg
+-- ---- ------- ------- --------------------------------------------- ----
+15 7w   bsp3    bsp uni organize git repo                             2.18
+16 7w   bsp2    bsp uni organize git repo                             2.18
+17 7w   bsp2    bsp uni reading openVPN                               2.17
+18 7w   bsp2    bsp uni fix bugs                                      2.17
+19 7w   bsp2    bsp uni add features with the possibilites of openVPN 2.17
+20 6w   bsp2    bsp uni reading openVPN man page                      2.16
+21 6w   bsp2    bsp uni reading howto                                 2.16
+ 1 7w   range   money   write doc                                     2.09
+ 2 7w   range   money   test cams                                     2.09
+ 3 7w   arch    system  benchmarks                                    2.09
+ 4 7w   arch    system  nvim configuren                               2.09
+ 5 7w   arch    system  pop up for battery and time                   2.09
+ 6 7w   arch    system  look into mpv                                 2.09
+ 7 7w   arch    system  reading into service handling                 2.09
+ 8 7w   arch    system  app launcher configuren                       2.09
+ 9 7w   arch    system  login display                                 2.09
+10 7w   arch    system  find solution for disk encryption login fail  2.09
+
+35 tasks, truncated to 17 lines
