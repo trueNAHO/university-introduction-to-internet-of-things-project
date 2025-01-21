@@ -1,3 +1,5 @@
+# Useful resource https://www.researchgate.net/publication/334986010_Introduction_to_MCDM_Techniques_AHP_as_Example
+
 import numpy as np
 
 # Example data
@@ -31,55 +33,64 @@ room_comparisions = {
     ])
 }
 
-def normalize_matrix(matrix):
-    sums = np.sum(matrix, axis=0)
-    normalized_matrix = matrix / sums
-    return normalized_matrix
+class AHP:
+    def __init__(self):
+        pass
 
-def calculate_priority_vector(normalized_matrix):
-    return np.mean(normalized_matrix, axis=1)
-
-def check_consistency(matrix, priority_vector):
-    n = matrix.shape[0]
-    lambda_max = np.sum(np.dot(matrix, priority_vector) / priority_vector) / n
-    ci = (lambda_max - n) / (n - 1)
-    random_index = {
-        1: 0.0, 2: 0.0, 3: 0.58, 4: 0.9, 5: 1.12, 6: 1.24,
-        7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49
-    }
-    ri = random_index.get(n, 1.49)  # Default to 1.49 for n > 10
-    cr = ci / ri if ri else 0
-    return ci, cr
-
-def ahp(need_facility, criteria_rates, room_comparisions):
-    normalized_matrix = normalize_matrix(criteria_rates)
-    priority_vector = calculate_priority_vector(normalized_matrix)
-
-    # check consistency
-    ci, cr = check_consistency(criteria_rates, priority_vector)
-    if cr > 0.1:
-        raise ValueError(f"Consistency ratio too high for criteria: {cr}")
-
-
-    # Room comparisons
-    alternative_weights = {}
-    for criterion, alt_matrix in room_comparisions.items():
-        normalized_alt_matrix = normalize_matrix(alt_matrix)
-        alt_weights = calculate_priority_vector(normalized_alt_matrix)
-
-        ci, cr = check_consistency(alt_matrix, alt_weights)
+    def normalize_matrix(self, matrix):
+        # normalize vector by summing the columns together
+        sums = np.sum(matrix, axis=0)
+        normalized_matrix = matrix / sums
+        return normalized_matrix
+    
+    def calculate_priority_vector(self, normalized_matrix):
+        return np.mean(normalized_matrix, axis=1)
+    
+    def check_consistency(self, matrix, priority_vector):
+        n = matrix.shape[0]
+        lambda_max = np.sum(np.dot(matrix, priority_vector) / priority_vector) / n
+        ci = (lambda_max - n) / (n - 1)
+        # RCI table publicly available
+        # https://www.researchgate.net/publication/247759937_The_Analytic_Hierarchy_Process_-_What_It_Is_and_How_It_Is_Used
+        random_index = {
+            1: 0.0, 2: 0.0, 3: 0.58, 4: 0.9, 5: 1.12, 6: 1.24,
+            7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49
+        }
+        ri = random_index.get(n, 1.49)  # Default to 1.49 for n > 10sum
+        cr = ci / ri if ri else 0
+        return cr
+    
+    def ahp(self, need_facility, criteria_rates, room_comparisions):
+        normalized_matrix = self.normalize_matrix(criteria_rates)
+        priority_vector = self.calculate_priority_vector(normalized_matrix)
+    
+        # check consistency
+        cr = self.check_consistency(criteria_rates, priority_vector)
         if cr > 0.1:
-            raise ValueError(f"Consistency ratio too high for {criterion}: {cr}")
+            raise ValueError(f"Consistency ratio too high for criteria: {cr}")
+    
+    
+        # Room comparisons
+        alternative_weights = {}
+        for criterion, alt_matrix in room_comparisions.items():
+            normalized_alt_matrix = self.normalize_matrix(alt_matrix)
+            alt_weights = self.calculate_priority_vector(normalized_alt_matrix)
+    
+            cr = self.check_consistency(alt_matrix, alt_weights)
+            if cr > 0.1:
+                raise ValueError(f"Consistency ratio too high for {criterion}: {cr}")
+    
+            alternative_weights[criterion] = alt_weights
+    
+        # final calculations
+        final_weights = np.zeros(len(room_comparisions[list(room_comparisions.keys())[0]]))
+        for i, criterion in enumerate(alternative_weights):
+            final_weights += priority_vector[i] * np.array(alternative_weights[criterion])
+    
+        return final_weights, np.max(final_weights)
 
-        alternative_weights[criterion] = alt_weights
+ahp = AHP()
 
-    # final calculations
-    final_weights = np.zeros(len(room_comparisions[list(room_comparisions.keys())[0]]))
-    for i, criterion in enumerate(alternative_weights):
-        final_weights += priority_vector[i] * np.array(alternative_weights[criterion])
-
-    return final_weights, np.max(final_weights)
-
-final_weights, optimal = ahp(True, criteria, room_comparisions)
+final_weights, optimal = ahp.ahp(True, criteria, room_comparisions)
 print(final_weights)
 print(optimal)
