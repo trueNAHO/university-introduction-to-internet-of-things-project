@@ -1,3 +1,9 @@
+'''Implementation of MCDM algorithms
+
+The file contains the implementation of MCMD algorithms. The file should be
+used as python module.
+'''
+
 # Useful resource https://www.researchgate.net/publication/334986010_Introduction_to_MCDM_Techniques_AHP_as_Example
 
 import numpy as np
@@ -34,19 +40,52 @@ room_comparisions = {
 }
 
 class AHP:
+    '''AHP algorithm
+
+    Args:
+        None
+    '''
     def __init__(self):
         pass
 
-    def normalize_matrix(self, matrix):
+    def _normalize_matrix(self, matrix):
+        ''' Normalize matrix
+
+        Takes a matrix and does following steps:
+        1. Create array with the sums of columns of the given matrix
+        2. Divide the items in matrix with their respective sum
+
+        Args:
+            matrix: two dimension matrix of the comparisions
+
+        Return:
+            normalized_matrix: the normalized two dimensional matrix
+        '''
         # normalize vector by summing the columns together
         sums = np.sum(matrix, axis=0)
         normalized_matrix = matrix / sums
         return normalized_matrix
     
-    def calculate_priority_vector(self, normalized_matrix):
+    def _calculate_priority_vector(self, normalized_matrix):
+        ''' Calculate priority vector (eigenvector)
+        
+        Args:
+            normalized_matrix: A normalized matrix
+
+        Return:
+            array: priority vector
+        '''
         return np.mean(normalized_matrix, axis=1)
     
-    def check_consistency(self, matrix, priority_vector):
+    def _check_consistency(self, matrix, priority_vector):
+        '''Check consistency
+        
+        Args:
+            matrix: 2 dimensional comparision matrix
+
+        Return:
+            float: consistency check result
+        '''
         n = matrix.shape[0]
         lambda_max = np.sum(np.dot(matrix, priority_vector) / priority_vector) / n
         ci = (lambda_max - n) / (n - 1)
@@ -61,11 +100,23 @@ class AHP:
         return cr
     
     def ahp(self, need_facility, criteria_rates, room_comparisions):
-        normalized_matrix = self.normalize_matrix(criteria_rates)
-        priority_vector = self.calculate_priority_vector(normalized_matrix)
+        '''ahp algorithm
+
+        Args:
+            need_facility: boolean if facility is needed
+            criteria_rates: criteria comparision matrix
+            room_comparisions: room comparision matrix
+
+        Return:
+            final_weigths: final calculated weights
+            preferred_option: preferred option
+        '''
+
+        normalized_matrix = self._normalize_matrix(criteria_rates)
+        priority_vector = self._calculate_priority_vector(normalized_matrix)
     
         # check consistency
-        cr = self.check_consistency(criteria_rates, priority_vector)
+        cr = self._check_consistency(criteria_rates, priority_vector)
         if cr > 0.1:
             raise ValueError(f"Consistency ratio too high for criteria: {cr}")
     
@@ -73,10 +124,10 @@ class AHP:
         # Room comparisons
         alternative_weights = {}
         for criterion, alt_matrix in room_comparisions.items():
-            normalized_alt_matrix = self.normalize_matrix(alt_matrix)
-            alt_weights = self.calculate_priority_vector(normalized_alt_matrix)
+            normalized_alt_matrix = self._normalize_matrix(alt_matrix)
+            alt_weights = self._calculate_priority_vector(normalized_alt_matrix)
     
-            cr = self.check_consistency(alt_matrix, alt_weights)
+            cr = self._check_consistency(alt_matrix, alt_weights)
             if cr > 0.1:
                 raise ValueError(f"Consistency ratio too high for {criterion}: {cr}")
     
