@@ -21,7 +21,6 @@ from swagger_server.models.inline_response2009 import InlineResponse2009  # noqa
 from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
 from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: E501
 from swagger_server.models.room_facilities import RoomFacilities  # noqa: E501
-from swagger_server.models.room_room_name_body import RoomRoomNameBody  # noqa: E501
 from swagger_server.models.sound_value import SoundValue  # noqa: E501
 from swagger_server.models.temperature_value import TemperatureValue  # noqa: E501
 from swagger_server.models.voc_value import VOCValue  # noqa: E501
@@ -156,6 +155,20 @@ class TestDefaultController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_room_facilities_room_name_put(self):
+        """Test case for room_facilities_room_name_put
+
+        Update room facilities
+        """
+        body = RoomFacilities()
+        response = self.client.open(
+            '/Room_Facilities/{room_name}'.format(room_name='room_name_example'),
+            method='PUT',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
     def test_room_list_get(self):
         """Test case for room_list_get
 
@@ -167,50 +180,50 @@ class TestDefaultController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_room_room_name_delete(self):
-        """Test case for room_room_name_delete
-
-        Delete a Room
-        """
-        response = self.client.open(
-            '/Room/{room_name}'.format(room_name='room_name_example'),
-            method='DELETE')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-    def test_room_room_name_get(self):
-        """Test case for room_room_name_get
-
-        Retrive a list of room
-        """
-        response = self.client.open(
-            '/Room/{room_name}'.format(room_name=1),
-            method='GET')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-    def test_room_room_name_post(self):
-        """Test case for room_room_name_post
+    def test_room_list_post(self):
+        """Test case for room_list_post
 
         Add a new AirQualityRoom
         """
-        body = RoomRoomNameBody()
+        body = 'body_example'
         response = self.client.open(
-            '/Room/{room_name}'.format(room_name='room_name_example'),
+            '/RoomList',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_room_room_name_put(self):
-        """Test case for room_room_name_put
+    def test_rooms_room_name_delete(self):
+        """Test case for rooms_room_name_delete
+
+        Delete a Room
+        """
+        response = self.client.open(
+            '/Rooms/{room_name}'.format(room_name='room_name_example'),
+            method='DELETE')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_rooms_room_name_get(self):
+        """Test case for rooms_room_name_get
+
+        Retrive a list of room
+        """
+        response = self.client.open(
+            '/Rooms/{room_name}'.format(room_name='room_name_example'),
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_rooms_room_name_put(self):
+        """Test case for rooms_room_name_put
 
         Update room name
         """
         body = 'body_example'
         response = self.client.open(
-            '/Room/{room_name}'.format(room_name='room_name_example'),
+            '/Rooms/{room_name}'.format(room_name='room_name_example'),
             method='PUT',
             data=json.dumps(body),
             content_type='application/json')

@@ -26,7 +26,6 @@ from swagger_server.models.inline_response201_room import InlineResponse201Room
 from swagger_server.models.light_intensity_room import LightIntensityRoom
 from swagger_server.models.light_intensity_value import LightIntensityValue
 from swagger_server.models.room_facilities import RoomFacilities
-from swagger_server.models.room_room_name_body import RoomRoomNameBody
 from swagger_server.models.sound_room import SoundRoom
 from swagger_server.models.sound_value import SoundValue
 from swagger_server.models.temperature_room import TemperatureRoom

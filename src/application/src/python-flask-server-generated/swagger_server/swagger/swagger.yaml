@@ -20,14 +20,36 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/inline_response_200'
+                  $ref: "#/components/schemas/inline_response_200"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.default_controller
-  /Room/{room_name}:
+    post:
+      summary: Add a new AirQualityRoom
+      description: Adds a new Room with empty data.
+      operationId: room_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: Name of the room to be created
+              example: Room_1
+        required: true
+      responses:
+        "201":
+          description: Room successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_201"
+        "404":
+          description: Room already exist for the specified name
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Rooms/{room_name}:
     get:
       summary: Retrive a list of room
       description: "Returns a list of all rooms, each including their associated details."
-      operationId: room_room_name_get
+      operationId: rooms_room_name_get
       parameters:
       - name: room_name
         in: path
@@ -36,8 +58,7 @@ paths:
         style: simple
         explode: false
         schema:
-          minimum: 0
-          type: integer
+          type: string
       responses:
         "200":
           description: A JSON array of room names with their sensor values
@@ -46,13 +67,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/inline_response_200'
+                  $ref: "#/components/schemas/inline_response_200"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.default_controller
     put:
       summary: Update room name
       description: Updates the name of an existing room.
-      operationId: room_room_name_put
+      operationId: rooms_room_name_put
       parameters:
       - name: room_name
         in: path
@@ -75,45 +96,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: "#/components/schemas/inline_response_200_1"
         "400":
           description: Invalid input
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
-    post:
-      summary: Add a new AirQualityRoom
-      description: Adds a new AirQualityRoom with an empty `air_quality_data` array.
-      operationId: room_room_name_post
-      parameters:
-      - name: room_name
-        in: path
-        description: Name of the room to create
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Room_room_name_body'
-        required: true
-      responses:
-        "201":
-          description: Room successfully created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_201'
-        "404":
-          description: Room not found for the specified name
-      x-openapi-router-controller: swagger_server.controllers.default_controller
     delete:
       summary: Delete a Room
       description: Removes a Room from the room’s record.
-      operationId: room_room_name_delete
+      operationId: rooms_room_name_delete
       parameters:
       - name: room_name
         in: path
@@ -149,7 +141,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_2'
+                $ref: "#/components/schemas/inline_response_200_2"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -170,7 +162,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AirQualityValue'
+              $ref: "#/components/schemas/AirQualityValue"
         required: true
       responses:
         "201":
@@ -200,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_3'
+                $ref: "#/components/schemas/inline_response_200_3"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -221,7 +213,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CO2Value'
+              $ref: "#/components/schemas/CO2Value"
         required: true
       responses:
         "201":
@@ -251,7 +243,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_4'
+                $ref: "#/components/schemas/inline_response_200_4"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -272,7 +264,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HumidityValue'
+              $ref: "#/components/schemas/HumidityValue"
         required: true
       responses:
         "201":
@@ -302,7 +294,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_5'
+                $ref: "#/components/schemas/inline_response_200_5"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -323,7 +315,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LightIntensityValue'
+              $ref: "#/components/schemas/LightIntensityValue"
         required: true
       responses:
         "201":
@@ -353,7 +345,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_6'
+                $ref: "#/components/schemas/inline_response_200_6"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -374,7 +366,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SoundValue'
+              $ref: "#/components/schemas/SoundValue"
         required: true
       responses:
         "201":
@@ -404,7 +396,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_7'
+                $ref: "#/components/schemas/inline_response_200_7"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -425,7 +417,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TemperatureValue'
+              $ref: "#/components/schemas/TemperatureValue"
         required: true
       responses:
         "201":
@@ -455,7 +447,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_8'
+                $ref: "#/components/schemas/inline_response_200_8"
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -476,7 +468,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VOCValue'
+              $ref: "#/components/schemas/VOCValue"
         required: true
       responses:
         "201":
@@ -506,7 +498,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_9'
+                $ref: "#/components/schemas/inline_response_200_9"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    put:
+      summary: Update room facilities
+      description: Updates the facilities of a specific room. Allows adding new facilities
+        or modifying existing ones.
+      operationId: room_facilities_room_name_put
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to update facilities for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomFacilities"
+        required: true
+      responses:
+        "200":
+          description: Room facilities updated successfully
+        "400":
+          description: Invalid input
         "404":
           description: Room not found
       x-openapi-router-controller: swagger_server.controllers.default_controller
@@ -527,7 +547,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoomFacilities'
+              $ref: "#/components/schemas/RoomFacilities"
         required: true
       responses:
         "201":
@@ -571,7 +591,7 @@ components:
           type: array
           description: Air quality data for a specific room
           items:
-            $ref: '#/components/schemas/AirQualityValue'
+            $ref: "#/components/schemas/AirQualityValue"
     CO2Value:
       type: object
       properties:
@@ -598,7 +618,7 @@ components:
           type: array
           description: CO2 level readings for a specific room
           items:
-            $ref: '#/components/schemas/CO2Value'
+            $ref: "#/components/schemas/CO2Value"
     HumidityValue:
       type: object
       properties:
@@ -625,7 +645,7 @@ components:
           type: array
           description: Humidity readings for a specific room
           items:
-            $ref: '#/components/schemas/HumidityValue'
+            $ref: "#/components/schemas/HumidityValue"
     LightIntensityValue:
       type: object
       properties:
@@ -652,7 +672,7 @@ components:
           type: array
           description: Light intensity readings for a specific room
           items:
-            $ref: '#/components/schemas/LightIntensityValue'
+            $ref: "#/components/schemas/LightIntensityValue"
     SoundValue:
       type: object
       properties:
@@ -679,7 +699,7 @@ components:
           type: array
           description: Sound level readings for a specific room
           items:
-            $ref: '#/components/schemas/SoundValue'
+            $ref: "#/components/schemas/SoundValue"
     TemperatureValue:
       type: object
       properties:
@@ -706,7 +726,7 @@ components:
           type: array
           description: Temperature readings for a specific room
           items:
-            $ref: '#/components/schemas/TemperatureValue'
+            $ref: "#/components/schemas/TemperatureValue"
     VOCValue:
       type: object
       properties:
@@ -733,7 +753,7 @@ components:
           type: array
           description: VOC level readings for a specific room
           items:
-            $ref: '#/components/schemas/VOCValue'
+            $ref: "#/components/schemas/VOCValue"
     RoomFacilities:
       type: object
       properties:
@@ -765,7 +785,7 @@ components:
           type: array
           description: List of rooms with their facilities
           items:
-            $ref: '#/components/schemas/FacilityRooms_rooms'
+            $ref: "#/components/schemas/FacilityRooms_rooms"
     inline_response_200:
       type: object
       properties:
@@ -774,21 +794,21 @@ components:
           description: Name of the room
           example: Room_1
         Air_Quality:
-          $ref: '#/components/schemas/AirQualityValue'
+          $ref: "#/components/schemas/AirQualityValue"
         CO2:
-          $ref: '#/components/schemas/CO2Value'
+          $ref: "#/components/schemas/CO2Value"
         Humidity:
-          $ref: '#/components/schemas/HumidityValue'
+          $ref: "#/components/schemas/HumidityValue"
         Light_Intensity:
-          $ref: '#/components/schemas/LightIntensityValue'
+          $ref: "#/components/schemas/LightIntensityValue"
         Sound:
-          $ref: '#/components/schemas/SoundValue'
+          $ref: "#/components/schemas/SoundValue"
         Temperature:
-          $ref: '#/components/schemas/TemperatureValue'
+          $ref: "#/components/schemas/TemperatureValue"
         VOC:
-          $ref: '#/components/schemas/VOCValue'
+          $ref: "#/components/schemas/VOCValue"
         Room_facilites:
-          $ref: '#/components/schemas/RoomFacilities'
+          $ref: "#/components/schemas/RoomFacilities"
       example:
         Room_facilites:
           seating_capacity: 62
@@ -818,6 +838,22 @@ components:
         Light_Intensity:
           light_intensity: 174.34
           timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_201:
+      type: object
+      properties:
+        room:
+          $ref: "#/components/schemas/inline_response_201_room"
+      example:
+        room:
+          Temperature_Data: []
+          Air_Quality_Data: []
+          Room_facilites_Data: []
+          Light_Intensity_Data: []
+          name: Room_1
+          Sound_Data: []
+          CO2_Data: []
+          VOC_Data: []
+          Humidity_Data: []
     inline_response_200_1:
       type: object
       properties:
@@ -830,29 +866,6 @@ components:
       example:
         updated_name: Updated_Room_Name
         old_name: Old_Room_Name
-    Room_room_name_body:
-      type: object
-      properties:
-        room_name:
-          type: string
-          description: Name of the room to be created
-          example: Room_1
-    inline_response_201:
-      type: object
-      properties:
-        room:
-          $ref: '#/components/schemas/inline_response_201_room'
-      example:
-        room:
-          Temperature_Data: []
-          Air_Quality_Data: []
-          Room_facilites_Data: []
-          Light_Intensity_Data: []
-          name: Room_1
-          Sound_Data: []
-          CO2_Data: []
-          VOC_Data: []
-          Humidity_Data: []
     inline_response_200_2:
       type: object
       properties:
@@ -864,7 +877,7 @@ components:
           type: array
           description: List of air quality values for the room
           items:
-            $ref: '#/components/schemas/AirQualityValue'
+            $ref: "#/components/schemas/AirQualityValue"
       example:
         room_name: Room_1
         air_quality_data:
@@ -885,7 +898,7 @@ components:
           type: array
           description: List of CO2 level values for the room
           items:
-            $ref: '#/components/schemas/CO2Value'
+            $ref: "#/components/schemas/CO2Value"
       example:
         room_name: Room_1
         co2_data:
@@ -904,7 +917,7 @@ components:
           type: array
           description: List of humidity level values for the room
           items:
-            $ref: '#/components/schemas/HumidityValue'
+            $ref: "#/components/schemas/HumidityValue"
       example:
         room_name: Room_1
         humidity_data:
@@ -923,7 +936,7 @@ components:
           type: array
           description: List of light intensity values for the room
           items:
-            $ref: '#/components/schemas/LightIntensityValue'
+            $ref: "#/components/schemas/LightIntensityValue"
       example:
         room_name: Room_1
         light_intensity_data:
@@ -942,7 +955,7 @@ components:
           type: array
           description: List of sound level values for the room
           items:
-            $ref: '#/components/schemas/SoundValue'
+            $ref: "#/components/schemas/SoundValue"
       example:
         room_name: Room_1
         sound_data:
@@ -961,7 +974,7 @@ components:
           type: array
           description: List of temperature values for the room
           items:
-            $ref: '#/components/schemas/TemperatureValue'
+            $ref: "#/components/schemas/TemperatureValue"
       example:
         room_name: Room_1
         temperature_data:
@@ -980,7 +993,7 @@ components:
           type: array
           description: List of VOC values for the room
           items:
-            $ref: '#/components/schemas/VOCValue'
+            $ref: "#/components/schemas/VOCValue"
       example:
         room_name: Room_1
         voc_data:
@@ -996,7 +1009,7 @@ components:
           description: Name of the room
           example: Room_1
         room_facilities:
-          $ref: '#/components/schemas/RoomFacilities'
+          $ref: "#/components/schemas/RoomFacilities"
       example:
         room_name: Room_1
         room_facilities:
@@ -1012,7 +1025,7 @@ components:
           description: Name of the room
           example: Room_1
         facilities:
-          $ref: '#/components/schemas/RoomFacilities'
+          $ref: "#/components/schemas/RoomFacilities"
     inline_response_201_room:
       type: object
       properties:
@@ -1024,42 +1037,42 @@ components:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/AirQualityValue'
+            $ref: "#/components/schemas/AirQualityValue"
         CO2_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/CO2Value'
+            $ref: "#/components/schemas/CO2Value"
         Humidity_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/HumidityValue'
+            $ref: "#/components/schemas/HumidityValue"
         Light_Intensity_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/LightIntensityValue'
+            $ref: "#/components/schemas/LightIntensityValue"
         Sound_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/SoundValue'
+            $ref: "#/components/schemas/SoundValue"
         Temperature_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/TemperatureValue'
+            $ref: "#/components/schemas/TemperatureValue"
         VOC_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/VOCValue'
+            $ref: "#/components/schemas/VOCValue"
         Room_facilites_Data:
           type: array
           example: []
           items:
-            $ref: '#/components/schemas/RoomFacilities'
+            $ref: "#/components/schemas/RoomFacilities"
       example:
         Temperature_Data: []
         Air_Quality_Data: []
