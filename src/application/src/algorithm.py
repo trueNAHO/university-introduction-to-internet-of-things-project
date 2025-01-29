@@ -98,50 +98,116 @@ class AHP:
         ri = random_index.get(n, 1.49)  # Default to 1.49 for n > 10sum
         cr = ci / ri if ri else 0
         return cr
-    
-    def ahp(self, need_facility, criteria_rates, room_comparisions):
-        '''ahp algorithm
 
-        Args:
-            need_facility: boolean if facility is needed
-            criteria_rates: criteria comparision matrix
-            room_comparisions: room comparision matrix
+    def _construct_decision_matrix(self, room_comparisons):
+        '''Construct the decision matrix from room comparisons.'''
+        criteria = list(room_comparisons.keys())
+        alternatives = room_comparisons[criteria[0]].shape[0]
+        decision_matrix = np.zeros((alternatives, len(criteria)))
 
-        Return:
-            final_weigths: final calculated weights
-            preferred_option: preferred option
-        '''
+        for j, criterion in enumerate(criteria):
+            for i in range(alternatives):
+                decision_matrix[i, j] = room_comparisons[criterion][i, i]
 
-        normalized_matrix = self._normalize_matrix(criteria_rates)
-        priority_vector = self._calculate_priority_vector(normalized_matrix)
-    
-        # check consistency
-        cr = self._check_consistency(criteria_rates, priority_vector)
+        return decision_matrix
+
+    def _normalize_decision_matrix(self, decision_matrix):
+        '''Normalize the decision matrix using vector normalization.'''
+        norm_matrix = np.zeros_like(decision_matrix)
+        for j in range(decision_matrix.shape[1]):
+            column = decision_matrix[:, j]
+            norm = np.linalg.norm(column)
+            norm_matrix[:, j] = column / norm
+        return norm_matrix
+
+    def _calculate_ideal_solutions(self, weighted_matrix):
+        '''Determine the ideal and negative-ideal solutions.'''
+        ideal_solution = np.max(weighted_matrix, axis=0)
+        negative_ideal_solution = np.min(weighted_matrix, axis=0)
+        return ideal_solution, negative_ideal_solution
+
+    def _calculate_separation_measures(self, weighted_matrix, ideal_solution, negative_ideal_solution):
+        '''Calculate the separation measures from the ideal and negative-ideal solutions.'''
+        separation_ideal = np.sqrt(np.sum((weighted_matrix - ideal_solution) ** 2, axis=1))
+        separation_negative_ideal = np.sqrt(np.sum((weighted_matrix - negative_ideal_solution) ** 2, axis=1))
+        return separation_ideal, separation_negative_ideal
+
+    def _calculate_relative_closeness(self, separation_ideal, separation_negative_ideal):
+        '''Calculate the relative closeness to the ideal solution.'''
+        return separation_negative_ideal / (separation_ideal + separation_negative_ideal)
+
+    def ahp_topsis(self, criteria_matrix, room_comparisons):
+        '''Perform the combined AHP-TOPSIS analysis.'''
+        # Step 1: AHP to determine criteria weights
+        normalized_criteria_matrix = self._normalize_matrix(criteria_matrix)
+        criteria_weights = self._calculate_priority_vector(normalized_criteria_matrix)
+
+        # Check consistency of criteria matrix
+        cr = self._check_consistency(criteria_matrix, criteria_weights)
         if cr > 0.1:
             raise ValueError(f"Consistency ratio too high for criteria: {cr}")
+
+        # Step 2: Construct the decision matrix
+        decision_matrix = self._construct_decision_matrix(room_comparisons)
+
+        # Step 3: Normalize the decision matrix
+        normalized_decision_matrix = self._normalize_decision_matrix(decision_matrix)
+
+        # Step 4: Apply criteria weights to the normalized decision matrix
+        weighted_matrix = normalized_decision_matrix * criteria_weights
+
+        # Step 5: Determine ideal and negative-ideal solutions
+        ideal_solution, negative_ideal_solution = self._calculate_ideal_solutions(weighted_matrix)
+
+        # Step 6: Calculate separation measures
+        separation_ideal, separation_negative_ideal = self._calculate_separation_measures(weighted_matrix, ideal_solution, negative_ideal_solution)
+
+        # Step 7: Calculate relative closeness to the ideal solution
+        relative_closeness = self._calculate_relative_closeness(separation_ideal, separation_negative_ideal)
+
+        return relative_closeness
     
+#    def ahp(self, need_facility, criteria_rates, room_comparisions):
+#        '''ahp algorithm
+#
+#        Args:
+#            need_facility: boolean if facility is needed
+#            criteria_rates: criteria comparision matrix
+#            room_comparisions: room comparision matrix
+#
+#        Return:
+#            final_weigths: final calculated weights
+#            preferred_option: preferred option
+#        '''
+#
+#        normalized_matrix = self._normalize_matrix(criteria_rates)
+#        priority_vector = self._calculate_priority_vector(normalized_matrix)
+#    
+#        # check consistency
+#        cr = self._check_consistency(criteria_rates, priority_vector)
+#        if cr > 0.1:
+#            raise ValueError(f"Consistency ratio too high for criteria: {cr}")
+#
+# # Room comparisons
+        # alternative_weights = {}
+        # for criterion, alt_matrix in room_comparisions.items():
+        #     normalized_alt_matrix = self._normalize_matrix(alt_matrix)
+        #     alt_weights = self._calculate_priority_vector(normalized_alt_matrix)
     
-        # Room comparisons
-        alternative_weights = {}
-        for criterion, alt_matrix in room_comparisions.items():
-            normalized_alt_matrix = self._normalize_matrix(alt_matrix)
-            alt_weights = self._calculate_priority_vector(normalized_alt_matrix)
+        #     cr = self._check_consistency(alt_matrix, alt_weights)
+        #     if cr > 0.1:
+        #         raise ValueError(f"Consistency ratio too high for {criterion}: {cr}")
     
-            cr = self._check_consistency(alt_matrix, alt_weights)
-            if cr > 0.1:
-                raise ValueError(f"Consistency ratio too high for {criterion}: {cr}")
+        #     alternative_weights[criterion] = alt_weights
     
-            alternative_weights[criterion] = alt_weights
+        # # final calculations
+        # final_weights = np.zeros(len(room_comparisions[list(room_comparisions.keys())[0]]))
+        # for i, criterion in enumerate(alternative_weights):
+        #     final_weights += priority_vector[i] * np.array(alternative_weights[criterion])
     
-        # final calculations
-        final_weights = np.zeros(len(room_comparisions[list(room_comparisions.keys())[0]]))
-        for i, criterion in enumerate(alternative_weights):
-            final_weights += priority_vector[i] * np.array(alternative_weights[criterion])
-    
-        return final_weights, np.max(final_weights)
+        # return final_weights, np.max(final_weights)
 
 ahp = AHP()
 
-final_weights, optimal = ahp.ahp(True, criteria, room_comparisions)
-print(final_weights)
-print(optimal)
+test = ahp.ahp_topsis(criteria, room_comparisions)
+print(test)
