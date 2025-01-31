@@ -1,6 +1,5 @@
 /.direnv/
 /.pre-commit-config.yaml
+/src/application/src/venv/
 result
 result-*
-src/application/src/.gitignore
-src/application/src/venv/
