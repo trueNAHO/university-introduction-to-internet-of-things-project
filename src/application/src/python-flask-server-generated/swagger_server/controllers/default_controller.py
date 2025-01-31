@@ -577,25 +577,12 @@ def room_facilities_room_name_post(body, room_name):  # noqa: E501
 
 
 
-def room_facilities_room_name_put(body, room_name):  # noqa: E501
-    """Update room facilities
-
-    Updates the facilities of a specific room. Allows adding new facilities or modifying existing ones. # noqa: E501
-
-    :param body: New or updated facilities for the room
-    :type body: dict | bytes
-    :param room_name: Name of the room to update facilities for
-    :type room_name: str
-
-    :rtype: JSON response with status code
-    """
-    # Ensure request contains valid JSON
+def room_facilities_room_name_put(body, room_name):
     if not connexion.request.is_json:
         return jsonify({"error": "Invalid input: JSON payload required"}), 400
 
     body = connexion.request.get_json()
 
-    # Define allowed fields and their expected types
     allowed_fields = {
         "videoprojector": bool,
         "seating_capacity": int,
@@ -603,7 +590,6 @@ def room_facilities_room_name_put(body, room_name):  # noqa: E501
         "robots_for_training": int
     }
 
-    # Validate input fields: Check for invalid fields
     invalid_fields = [field for field in body if field not in allowed_fields]
     if invalid_fields:
         return jsonify({
@@ -612,7 +598,6 @@ def room_facilities_room_name_put(body, room_name):  # noqa: E501
             "invalid_fields": invalid_fields
         }), 400
 
-    # Validate input types
     type_mismatch_fields = [
         field for field, expected_type in allowed_fields.items()
         if field in body and not isinstance(body[field], expected_type)
@@ -624,39 +609,35 @@ def room_facilities_room_name_put(body, room_name):  # noqa: E501
             "type_mismatch_fields": type_mismatch_fields
         }), 400
 
-    # Query the database for the specific room
-    room_data = mongo.db.facilities.find_one({"rooms.name": room_name})
+    room_data = mongo.db.room_facilities.find_one({"rooms.name": room_name})
 
     if not room_data:
         return jsonify({"error": "Room not found"}), 404
 
-    # Iterate through the rooms to find the specific one
     room_updated = False
     for room in room_data["rooms"]:
         if room["name"] == room_name:
-            # Update the facilities dictionary with new values
             if "facilities" not in room:
                 room["facilities"] = {}
 
-            room["facilities"].update(body)  # Merge new/updated values
+            room["facilities"].update(body)
             room_updated = True
             break
 
     if not room_updated:
         return jsonify({"error": "Room not found"}), 404
 
-    # Update the database with the modified document
-    mongo.db.facilities.update_one(
-        {"_id": room_data["_id"]},  # Match the specific document
-        {"$set": {"rooms": room_data["rooms"]}}  # Update the rooms array
+    mongo.db.room_facilities.update_one(
+        {"rooms.name": room_name},
+        {"$set": {"rooms.$.facilities": room["facilities"]}}
     )
 
-    # Return a success response
     return jsonify({
         "message": "Room facilities updated successfully",
         "room_name": room_name,
         "updated_facilities": body
     }), 200
+
 
 
 def room_list_get():  # noqa: E501
@@ -710,15 +691,8 @@ def room_list_get():  # noqa: E501
 
 
 def room_list_post(body):  # noqa: E501
-    """Add a new AirQualityRoom
+    """Add a new AirQualityRoom to all sensor collections"""
 
-    Adds a new Room with empty data. # noqa: E501
-
-    :param body: Name of the room to create
-    :type body: dict | bytes
-
-    :rtype: InlineResponse201
-    """
     if not connexion.request.is_json:
         return jsonify({"error": "Invalid input: JSON payload required"}), 400
 
@@ -727,41 +701,49 @@ def room_list_post(body):  # noqa: E501
     if not isinstance(body, str) or not body.strip():
         return jsonify({"error": "Invalid room name"}), 400
 
-    # Sensor types to initialize for the new room
-    sensor_types = ["air_quality", "co2", "humidity", "light_intensity", "sound", "temperature", "voc", "room_facilities"]
+    # Sensor collections in the database
+    sensor_types = [
+        "air_quality", "co2", "humidity", "light_intensity", 
+        "sound", "temperature", "voc", "room_facilities"
+    ]
 
+    # Check if the room already exists in any collection
     room_already_exists = False
-
-    # Check if the room exists in any collection before adding
     for sensor_type in sensor_types:
-        sensor_collection = mongo.db[sensor_type]
-        existing_room = sensor_collection.find_one({"rooms.name": body})
-
+        existing_room = mongo.db[sensor_type].find_one({"rooms.name": body})
         if existing_room:
             room_already_exists = True
-            break  # No need to check further if room exists
+            bad_sensor = sensor_type
+            break  # Stop checking once found
 
     if room_already_exists:
-        return jsonify({"error": f"Room '{body}' already exists"}), 404
+        return jsonify({"error": f"Room '{body}' already exists in {bad_sensor}"}), 409  # 409 Conflict
 
     # Loop through each sensor collection and add the new room
     for sensor_type in sensor_types:
         sensor_collection = mongo.db[sensor_type]
+
+        if sensor_type == "room_facilities":
+            # Room facilities should have a proper 'facilities' structure
+            new_room = {
+                "name": body,
+                "facilities": {}
+            }
+        else:
+            # Other sensor collections get an empty array for values
+            new_room = {
+                "name": body,
+                f"{sensor_type}_values": []
+            }
+
         sensor_collection.update_one(
-            {"_id": ObjectId()},  # Create or find the correct document
-            {
-                "$push": {
-                    "rooms": {
-                        "name": body,
-                        f"{sensor_type}_values": [] if sensor_type != "room_facilities" else {},  # Initialize values
-                    }
-                }
-            },
+            {},  # Match any document (assuming there's only one)
+            {"$push": {"rooms": new_room}},
             upsert=True  # Create a document if it doesn't exist
         )
 
-    # Return a success response
-    return jsonify({"message": f"Room '{body}' successfully created in all collections."}), 201
+    return jsonify({"message": f"Room '{body}' successfully added to all collections."}), 201
+
 
 
 def rooms_room_name_delete(room_name):  # noqa: E501
