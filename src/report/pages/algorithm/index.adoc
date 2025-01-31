@@ -35,6 +35,7 @@ The goal of AHP is to compare each criteria to each other and each alternative
 to every other alternative for every criteria. To do the comparision we will use 
 this table: (insert image [1])
 
+
 We decide for the following judgements:
 
 |A          |B            |More important|Intensity|
@@ -77,9 +78,7 @@ Room C (good temperature, good Co2 Levels,    good air quality,   low facility)
 |Room B     |7     |1     |1     |
 |Room C     |7     |1     |1     |
 
-TOPSIS
 
-Combination AHP-TOPSIS
-
-Ressource:
+Ressources:
 [1]: https://en.wikipedia.org/wiki/Analytic_hierarchy_process_%E2%80%93_car_example#/media/File:AHPFundamentalScale.png
+[2]: https://www.researchgate.net/publication/334986010_Introduction_to_MCDM_Techniques_AHP_as_Example
