@@ -10,14 +10,19 @@ import numpy as np
 
 class AHP:
     '''AHP algorithm'''
-    def __init__(self, criteria, room_comparisons):
+    def __init__(self, criteria, room_comparisons, need_facility=False):
         ''' Constructer of the class
             
         Args:
             criteria_matrix: criteria comaprision matrix
             room_comparision: dictionary of room propreties and their
                               comparisions between every room
+            need_facility: boolean indicating if facility is required
         '''
+        if not need_facility and "Facilities" in room_comparisons:
+            criteria = np.delete(criteria, -1, axis=0)
+            criteria = np.delete(criteria, -1, axis=1)
+            del room_comparisons["Facilities"]
 
         self.criteria_matrix = criteria
         self.room_comparisons = room_comparisons 
