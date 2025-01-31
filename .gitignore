@@ -3,3 +3,4 @@
 result
 result-*
 src/application/src/.gitignore
+src/application/src/venv/
