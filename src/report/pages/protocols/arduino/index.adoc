@@ -1,0 +1,9 @@
+= Arduino
+
+Considering the potentially large amount of messages between the Arduino and the
+DB, the buffered and reliable Message Queuing Telemetry Transport (MQTT)
+protocol seems appropriate.
+
+In this case, the Arduino is the MQTT client publishing its sensor data to MQTT
+topics at regular intervals, while the DB is the MQTT broker managing and
+storing incoming messages.

@@ -1,1 +1,14 @@
 = Protocols
+
+Since we do not have access to a Raspberry Pi, the database (DB) will be hosted
+inside a Docker container.
+
+include::./arduino/index.adoc[leveloffset=+1]
+
+include::./sensors/index.adoc[leveloffset=+1]
+
+include::./room_facilities/index.adoc[leveloffset=+1]
+
+include::./shared_agenda/index.adoc[leveloffset=+1]
+
+include::./user_preferences/index.adoc[leveloffset=+1]

@@ -1,0 +1,8 @@
+= User Preferences
+
+Considering end-users specify their requirements and preferences to the DB and
+receive an answer, the flexible REST API over HTTP protocol seems appropriate.
+
+In this case, users send HTTP POST requests to the DB REST API to submit their
+requirements and preferences, and the DB responds with POST requests containing
+the most appropriate room.

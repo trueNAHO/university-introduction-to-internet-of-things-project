@@ -1,0 +1,6 @@
+= Room Facilities
+
+Considering the DB merely retrieves the room facilities information, the
+flexible REST API over HTTP protocol seems appropriate.
+
+In this case, the DB sends HTTP GET requests to the room facilities REST API.

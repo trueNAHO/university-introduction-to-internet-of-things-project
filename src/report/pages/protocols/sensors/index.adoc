@@ -1,0 +1,8 @@
+= Sensors
+
+Considering the low-level communication between the Arduino and its sensors, the
+Inter-Integrated Circuit (I2C) protocol seems appropriate.
+
+In this case, the Arduino is the master device and communicates with each of its
+uniquely identifiable slave sensors over the I2C bus, using the Serial Data Line
+(SDA) and Serial Clock Line (SCL) wires.
