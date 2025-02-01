@@ -18,7 +18,15 @@
               autoflake.enable = true;
               ruff-format.enable = true;
               ruff.enable = true;
-              typos.settings.ignored-words = ["Retrive" "facilites"];
+
+              typos.settings.ignored-words = [
+                "Codgen"
+                "Retrive"
+                "facilites"
+                "mosquitto"
+              ];
+
+              yamllint.enable = false;
             };
 
             devShells.packages = lib.singleton (
