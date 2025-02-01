@@ -1,23 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Waiting for MongoDB to start..."
-until mongosh --host localhost --eval "print('MongoDB is ready!')" &>/dev/null; do
-  sleep 2
+mongo_import() {
+  mongoimport --db Temp_DB --collection "$1" --file "$2"
+}
+
+until
+  mongosh --host localhost --eval "print('MongoDB is ready!')" &>/dev/null
+do
+  printf '[%s] %s\n' "$(date --iso-8601=second)" "Waiting for MongoDB to start"
+  sleep 0.1
 done
 
-echo "Importing sensor data into MongoDB..."
+mongo_import air_quality /data/Project_sensor_data/air_quality_sensor_data.json
+mongo_import co2 /data/Project_sensor_data/co2_sensor_data.json
+mongo_import humidity /data/Project_sensor_data/humidity_sensor_data.json
 
-# Define database name
-DB_NAME="Temp_DB"
+mongo_import \
+  light_intensity \
+  /data/Project_sensor_data/LightIntensity_sensor_data.json
 
-# Import JSON files into respective collections
-mongoimport --db "$DB_NAME" --collection air_quality --file /data/Project_sensor_data/air_quality_sensor_data.json
-mongoimport --db "$DB_NAME" --collection humidity --file /data/Project_sensor_data/humidity_sensor_data.json
-mongoimport --db "$DB_NAME" --collection room_facilities --file /data/Project_sensor_data/room_facilities_data.json 
-mongoimport --db "$DB_NAME" --collection temperature --file /data/Project_sensor_data/temperature_sensor_data.json 
-mongoimport --db "$DB_NAME" --collection co2 --file /data/Project_sensor_data/co2_sensor_data.json 
-mongoimport --db "$DB_NAME" --collection light_intensity --file /data/Project_sensor_data/LightIntensity_sensor_data.json 
-mongoimport --db "$DB_NAME" --collection sound --file /data/Project_sensor_data/sound_sensor_data.json 
-mongoimport --db "$DB_NAME" --collection voc --file /data/Project_sensor_data/voc_sensor_data.json 
-
-echo "Data import completed successfully!"
+mongo_import room_facilities /data/Project_sensor_data/room_facilities_data.json
+mongo_import sound /data/Project_sensor_data/sound_sensor_data.json
+mongo_import temperature /data/Project_sensor_data/temperature_sensor_data.json
+mongo_import voc /data/Project_sensor_data/voc_sensor_data.json
