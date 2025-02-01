@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # here is the path to folder with data
-DATA_FOLDER = "data"
+DATA_FOLDER = "../assets"
 
 
 def load_sensor_data():
