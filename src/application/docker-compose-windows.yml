@@ -1,0 +1,75 @@
+---
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=Temp_DB
+    volumes:
+      - mongo_data:/data/db
+      # mount sensor data (read-only)
+      - ./assets:/data/Project_sensor_data:ro
+      # initialization script
+      - ./src/import-data.sh:/docker-entrypoint-initdb.d/import-data-windows.sh:ro
+    networks:
+      - iot-network
+
+  backend-api:
+    build: ./src/api
+    container_name: backend-api
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "5000:5000"
+      - "8087:8087"
+    networks:
+      - iot-network
+
+  # mqtt-broker:
+  #   image: eclipse-mosquitto:latest
+  #   container_name: mqtt-broker
+  #   restart: always
+  #   volumes:
+  #     - ./src/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+  #   ports:
+  #     - "1883:1883"
+  #     - "9001:9001"
+  #   networks:
+  #     - iot-network
+  #
+  # mqtt-serial:
+  #   build:
+  #     context: ./src/mqtt
+  #     target: serial
+  #   container_name: mqtt-serial
+  #   restart: always
+  #   depends_on:
+  #     - mqtt-broker
+  #   # Map the host's USB device (adjust the device path if necessary)
+  #   devices:
+  #     - "/dev/ttyACM0:/dev/ttyACM0"   # or "/dev/ttyACM0:/dev/ttyACM0"
+  #   networks:
+  #     - iot-network
+  #
+  # mqtt-to-api:
+  #   build:
+  #     context: src/mqtt
+  #     target: toapi
+  #   container_name: mqtt-to-api
+  #   restart: always
+  #   depends_on:
+  #     - mqtt-broker
+  #     - backend-api
+  #   networks:
+  #     - iot-network
+
+networks:
+  iot-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
