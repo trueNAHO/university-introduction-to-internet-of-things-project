@@ -6,15 +6,12 @@ from bson.objectid import ObjectId
 import re
 from datetime import datetime
 
-
-
-
-
 from swagger_server.models.air_quality_value import AirQualityValue  # noqa: E501
 from swagger_server.models.co2_value import CO2Value  # noqa: E501
 from swagger_server.models.humidity_value import HumidityValue  # noqa: E501
 from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from swagger_server.models.inline_response2001 import InlineResponse2001  # noqa: E501
+from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
 from swagger_server.models.inline_response2002 import InlineResponse2002  # noqa: E501
 from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa: E501
 from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
@@ -500,83 +497,6 @@ def room_facilities_room_name_get(room_name):  # noqa: E501
         "facilities": facilities
     })
 
-
-
-def room_facilities_room_name_post(body, room_name):  # noqa: E501
-    """Add or update room facilities for a room
-
-    Adds or updates room facilities for a specified room. # noqa: E501
-
-    :param body: 
-    :type body: dict | bytes
-    :param room_name: Name of the room to add/update facilities for
-    :type room_name: str
-
-    :rtype: None
-    """
-    # Parse the input body
-    if not connexion.request.is_json:
-        return jsonify({"error": "Invalid input: JSON payload required"}), 400
-
-    body = connexion.request.get_json()
-
-    # Define allowed fields and their expected types
-    allowed_fields = {
-        "videoprojector": bool,
-        "seating_capacity": int,
-        "computers": int,
-        "robots_for_training": int
-    }
-
-    # Check if the input body contains only the allowed fields
-    invalid_fields = [field for field in body if field not in allowed_fields]
-    if invalid_fields:
-        return jsonify({
-            "error": "Invalid input: Only the following fields are allowed",
-            "allowed_fields": list(allowed_fields.keys()),
-            "invalid_fields": invalid_fields
-        }), 400
-
-    # Check the types of the fields
-    type_mismatch_fields = [
-        field for field, expected_type in allowed_fields.items()
-        if field in body and not isinstance(body[field], expected_type)
-    ]
-
-    if type_mismatch_fields:
-        return jsonify({
-            "error": "Invalid input: Fields must have the correct types",
-            "type_mismatch_fields": type_mismatch_fields
-        }), 400
-
-    # Query the database for the specific room
-    room_data = mongo.db.facilities.find_one({"rooms.name": room_name})
-
-    if not room_data:
-        return jsonify({"error": "Room not found"}), 404
-
-    # Iterate through the rooms to find the specific one
-    for room in room_data["rooms"]:
-        if room["name"] == room_name:
-            # Update or add the facilities for the room
-            if "facilities" not in room:
-                room["facilities"] = []  # Initialize the list if it doesn't exist
-            room["facilities"].append(body)
-            break
-    else:
-        return jsonify({"error": "Room not found"}), 404
-
-    # Update the database with the modified document
-    mongo.db.facilities.update_one(
-        {"_id": room_data["_id"]},  # Match the specific document
-        {"$set": {"rooms": room_data["rooms"]}}  # Update the rooms array
-    )
-
-    # Return a success response
-    return jsonify({"message": "Facilities successfully added to the room"}), 201
-
-
-
 def room_facilities_room_name_put(body, room_name):
     if not connexion.request.is_json:
         return jsonify({"error": "Invalid input: JSON payload required"}), 400
@@ -743,6 +663,93 @@ def room_list_post(body):  # noqa: E501
         )
 
     return jsonify({"message": f"Room '{body}' successfully added to all collections."}), 201
+
+
+from flask import jsonify
+
+def rooms_last_room_name_get(room_name):  # noqa: E501
+    """Retrieve the last sensor values of a room
+
+    Returns the most recent sensor values for a specific room.
+
+    :param room_name: Name of the room to retrieve data for
+    :type room_name: str
+
+    :rtype: InlineResponse2002
+    """
+    sensor_types = {
+        "Air_Quality": "air_quality",
+        "CO2": "co2",
+        "Humidity": "humidity",
+        "Light_Intensity": "light_intensity",
+        "Sound": "sound",
+        "Temperature": "temperature",
+        "VOC": "voc"
+    }
+
+    room_data = {"name": room_name}
+
+    # Loop through each sensor type to get the most recent reading
+    for sensor, collection in sensor_types.items():
+        # Fetch the sensor data for the room
+        sensor_document = mongo.db[collection].find_one({"rooms.name": room_name})
+
+        if sensor_document:
+            for room in sensor_document.get("rooms", []):
+                if room["name"] == room_name:
+                    # If values are available, get the last (most recent) value in the list
+                    sensor_values = room.get(f"{sensor.lower()}_values", [])
+                    if sensor_values:
+                        room_data[sensor] = sensor_values[-1]  # Last item is the most recent
+                    else:
+                        room_data[sensor] = None
+                    break
+        else:
+            room_data[sensor] = None
+
+    # Fetch room facilities, if available
+    facilities_document = mongo.db.room_facilities.find_one({"rooms.name": room_name})
+    if facilities_document:
+        for room in facilities_document.get("rooms", []):
+            if room["name"] == room_name:
+                room_data["Room_facilities"] = room.get("facilities", {})
+                break
+    else:
+        room_data["Room_facilities"] = None
+
+    # If no data was found for any sensor or facility, return a 404 error
+    if not any(value is not None for value in room_data.values()):
+        return jsonify({"error": "Room not found"}), 404
+
+    # Return the data for the specified room
+    return jsonify(room_data), 200
+
+
+
+
+def room_list_names_get():  # noqa: E501
+    """Retrieve a list of all room names
+
+    Returns a list of all existing room names from the sensor collections. # noqa: E501
+
+
+    :rtype: List[str]
+    """
+    # Query the room_facilities collection for all room names
+    facilities_document = mongo.db.room_facilities.find({}, {"rooms.name": 1})
+
+    room_names = set()  # Use a set to avoid duplicates
+
+    # Iterate through the documents in the room_facilities collection
+    for doc in facilities_document:
+        if "rooms" in doc:
+            for room in doc["rooms"]:
+                room_names.add(room["name"])  # Add room name to the set
+
+    # Convert the set to a sorted list for consistency
+    room_list = sorted(room_names)
+
+    return jsonify(room_list), 200
 
 
 

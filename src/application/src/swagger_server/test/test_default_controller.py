@@ -10,6 +10,7 @@ from swagger_server.models.co2_value import CO2Value  # noqa: E501
 from swagger_server.models.humidity_value import HumidityValue  # noqa: E501
 from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from swagger_server.models.inline_response2001 import InlineResponse2001  # noqa: E501
+from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
 from swagger_server.models.inline_response2002 import InlineResponse2002  # noqa: E501
 from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa: E501
 from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
@@ -141,20 +142,6 @@ class TestDefaultController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_room_facilities_room_name_post(self):
-        """Test case for room_facilities_room_name_post
-
-        Add or update room facilities for a room
-        """
-        body = RoomFacilities()
-        response = self.client.open(
-            '/Room_Facilities/{room_name}'.format(room_name='room_name_example'),
-            method='POST',
-            data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
     def test_room_facilities_room_name_put(self):
         """Test case for room_facilities_room_name_put
 
@@ -180,6 +167,17 @@ class TestDefaultController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_room_list_names_get(self):
+        """Test case for room_list_names_get
+
+        Retrieve a list of all room names
+        """
+        response = self.client.open(
+            '/RoomList/Names',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
     def test_room_list_post(self):
         """Test case for room_list_post
 
@@ -191,6 +189,17 @@ class TestDefaultController(BaseTestCase):
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_rooms_last_room_name_get(self):
+        """Test case for rooms_last_room_name_get
+
+        Retrieve the last sensor values of a room
+        """
+        response = self.client.open(
+            '/Rooms/Last/{room_name}'.format(room_name='room_name_example'),
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

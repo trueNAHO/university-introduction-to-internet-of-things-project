@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.co2_value import CO2Value  # noqa: F401,E501
+from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +15,25 @@ class InlineResponse2003(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, co2_data: List[CO2Value]=None):  # noqa: E501
+    def __init__(self, room_name: str=None, air_quality_data: List[AirQualityValue]=None):  # noqa: E501
         """InlineResponse2003 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2003.  # noqa: E501
         :type room_name: str
-        :param co2_data: The co2_data of this InlineResponse2003.  # noqa: E501
-        :type co2_data: List[CO2Value]
+        :param air_quality_data: The air_quality_data of this InlineResponse2003.  # noqa: E501
+        :type air_quality_data: List[AirQualityValue]
         """
         self.swagger_types = {
             'room_name': str,
-            'co2_data': List[CO2Value]
+            'air_quality_data': List[AirQualityValue]
         }
 
         self.attribute_map = {
             'room_name': 'room_name',
-            'co2_data': 'co2_data'
+            'air_quality_data': 'air_quality_data'
         }
         self._room_name = room_name
-        self._co2_data = co2_data
+        self._air_quality_data = air_quality_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2003':
@@ -70,24 +70,24 @@ class InlineResponse2003(Model):
         self._room_name = room_name
 
     @property
-    def co2_data(self) -> List[CO2Value]:
-        """Gets the co2_data of this InlineResponse2003.
+    def air_quality_data(self) -> List[AirQualityValue]:
+        """Gets the air_quality_data of this InlineResponse2003.
 
-        List of CO2 level values for the room  # noqa: E501
+        List of air quality values for the room  # noqa: E501
 
-        :return: The co2_data of this InlineResponse2003.
-        :rtype: List[CO2Value]
+        :return: The air_quality_data of this InlineResponse2003.
+        :rtype: List[AirQualityValue]
         """
-        return self._co2_data
+        return self._air_quality_data
 
-    @co2_data.setter
-    def co2_data(self, co2_data: List[CO2Value]):
-        """Sets the co2_data of this InlineResponse2003.
+    @air_quality_data.setter
+    def air_quality_data(self, air_quality_data: List[AirQualityValue]):
+        """Sets the air_quality_data of this InlineResponse2003.
 
-        List of CO2 level values for the room  # noqa: E501
+        List of air quality values for the room  # noqa: E501
 
-        :param co2_data: The co2_data of this InlineResponse2003.
-        :type co2_data: List[CO2Value]
+        :param air_quality_data: The air_quality_data of this InlineResponse2003.
+        :type air_quality_data: List[AirQualityValue]
         """
 
-        self._co2_data = co2_data
+        self._air_quality_data = air_quality_data

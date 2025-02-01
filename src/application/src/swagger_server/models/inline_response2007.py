@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.temperature_value import TemperatureValue  # noqa: F401,E501
+from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +15,25 @@ class InlineResponse2007(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, temperature_data: List[TemperatureValue]=None):  # noqa: E501
+    def __init__(self, room_name: str=None, sound_data: List[SoundValue]=None):  # noqa: E501
         """InlineResponse2007 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2007.  # noqa: E501
         :type room_name: str
-        :param temperature_data: The temperature_data of this InlineResponse2007.  # noqa: E501
-        :type temperature_data: List[TemperatureValue]
+        :param sound_data: The sound_data of this InlineResponse2007.  # noqa: E501
+        :type sound_data: List[SoundValue]
         """
         self.swagger_types = {
             'room_name': str,
-            'temperature_data': List[TemperatureValue]
+            'sound_data': List[SoundValue]
         }
 
         self.attribute_map = {
             'room_name': 'room_name',
-            'temperature_data': 'temperature_data'
+            'sound_data': 'sound_data'
         }
         self._room_name = room_name
-        self._temperature_data = temperature_data
+        self._sound_data = sound_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2007':
@@ -70,24 +70,24 @@ class InlineResponse2007(Model):
         self._room_name = room_name
 
     @property
-    def temperature_data(self) -> List[TemperatureValue]:
-        """Gets the temperature_data of this InlineResponse2007.
+    def sound_data(self) -> List[SoundValue]:
+        """Gets the sound_data of this InlineResponse2007.
 
-        List of temperature values for the room  # noqa: E501
+        List of sound level values for the room  # noqa: E501
 
-        :return: The temperature_data of this InlineResponse2007.
-        :rtype: List[TemperatureValue]
+        :return: The sound_data of this InlineResponse2007.
+        :rtype: List[SoundValue]
         """
-        return self._temperature_data
+        return self._sound_data
 
-    @temperature_data.setter
-    def temperature_data(self, temperature_data: List[TemperatureValue]):
-        """Sets the temperature_data of this InlineResponse2007.
+    @sound_data.setter
+    def sound_data(self, sound_data: List[SoundValue]):
+        """Sets the sound_data of this InlineResponse2007.
 
-        List of temperature values for the room  # noqa: E501
+        List of sound level values for the room  # noqa: E501
 
-        :param temperature_data: The temperature_data of this InlineResponse2007.
-        :type temperature_data: List[TemperatureValue]
+        :param sound_data: The sound_data of this InlineResponse2007.
+        :type sound_data: List[SoundValue]
         """
 
-        self._temperature_data = temperature_data
+        self._sound_data = sound_data

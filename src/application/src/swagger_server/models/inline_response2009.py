@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.room_facilities import RoomFacilities  # noqa: F401,E501
+from swagger_server.models.voc_value import VOCValue  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +15,25 @@ class InlineResponse2009(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, room_facilities: RoomFacilities=None):  # noqa: E501
+    def __init__(self, room_name: str=None, voc_data: List[VOCValue]=None):  # noqa: E501
         """InlineResponse2009 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2009.  # noqa: E501
         :type room_name: str
-        :param room_facilities: The room_facilities of this InlineResponse2009.  # noqa: E501
-        :type room_facilities: RoomFacilities
+        :param voc_data: The voc_data of this InlineResponse2009.  # noqa: E501
+        :type voc_data: List[VOCValue]
         """
         self.swagger_types = {
             'room_name': str,
-            'room_facilities': RoomFacilities
+            'voc_data': List[VOCValue]
         }
 
         self.attribute_map = {
             'room_name': 'room_name',
-            'room_facilities': 'room_facilities'
+            'voc_data': 'voc_data'
         }
         self._room_name = room_name
-        self._room_facilities = room_facilities
+        self._voc_data = voc_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2009':
@@ -70,22 +70,24 @@ class InlineResponse2009(Model):
         self._room_name = room_name
 
     @property
-    def room_facilities(self) -> RoomFacilities:
-        """Gets the room_facilities of this InlineResponse2009.
+    def voc_data(self) -> List[VOCValue]:
+        """Gets the voc_data of this InlineResponse2009.
 
+        List of VOC values for the room  # noqa: E501
 
-        :return: The room_facilities of this InlineResponse2009.
-        :rtype: RoomFacilities
+        :return: The voc_data of this InlineResponse2009.
+        :rtype: List[VOCValue]
         """
-        return self._room_facilities
+        return self._voc_data
 
-    @room_facilities.setter
-    def room_facilities(self, room_facilities: RoomFacilities):
-        """Sets the room_facilities of this InlineResponse2009.
+    @voc_data.setter
+    def voc_data(self, voc_data: List[VOCValue]):
+        """Sets the voc_data of this InlineResponse2009.
 
+        List of VOC values for the room  # noqa: E501
 
-        :param room_facilities: The room_facilities of this InlineResponse2009.
-        :type room_facilities: RoomFacilities
+        :param voc_data: The voc_data of this InlineResponse2009.
+        :type voc_data: List[VOCValue]
         """
 
-        self._room_facilities = room_facilities
+        self._voc_data = voc_data

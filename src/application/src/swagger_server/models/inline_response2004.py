@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
+from swagger_server.models.co2_value import CO2Value  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +15,25 @@ class InlineResponse2004(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, humidity_data: List[HumidityValue]=None):  # noqa: E501
+    def __init__(self, room_name: str=None, co2_data: List[CO2Value]=None):  # noqa: E501
         """InlineResponse2004 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2004.  # noqa: E501
         :type room_name: str
-        :param humidity_data: The humidity_data of this InlineResponse2004.  # noqa: E501
-        :type humidity_data: List[HumidityValue]
+        :param co2_data: The co2_data of this InlineResponse2004.  # noqa: E501
+        :type co2_data: List[CO2Value]
         """
         self.swagger_types = {
             'room_name': str,
-            'humidity_data': List[HumidityValue]
+            'co2_data': List[CO2Value]
         }
 
         self.attribute_map = {
             'room_name': 'room_name',
-            'humidity_data': 'humidity_data'
+            'co2_data': 'co2_data'
         }
         self._room_name = room_name
-        self._humidity_data = humidity_data
+        self._co2_data = co2_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2004':
@@ -70,24 +70,24 @@ class InlineResponse2004(Model):
         self._room_name = room_name
 
     @property
-    def humidity_data(self) -> List[HumidityValue]:
-        """Gets the humidity_data of this InlineResponse2004.
+    def co2_data(self) -> List[CO2Value]:
+        """Gets the co2_data of this InlineResponse2004.
 
-        List of humidity level values for the room  # noqa: E501
+        List of CO2 level values for the room  # noqa: E501
 
-        :return: The humidity_data of this InlineResponse2004.
-        :rtype: List[HumidityValue]
+        :return: The co2_data of this InlineResponse2004.
+        :rtype: List[CO2Value]
         """
-        return self._humidity_data
+        return self._co2_data
 
-    @humidity_data.setter
-    def humidity_data(self, humidity_data: List[HumidityValue]):
-        """Sets the humidity_data of this InlineResponse2004.
+    @co2_data.setter
+    def co2_data(self, co2_data: List[CO2Value]):
+        """Sets the co2_data of this InlineResponse2004.
 
-        List of humidity level values for the room  # noqa: E501
+        List of CO2 level values for the room  # noqa: E501
 
-        :param humidity_data: The humidity_data of this InlineResponse2004.
-        :type humidity_data: List[HumidityValue]
+        :param co2_data: The co2_data of this InlineResponse2004.
+        :type co2_data: List[CO2Value]
         """
 
-        self._humidity_data = humidity_data
+        self._co2_data = co2_data
