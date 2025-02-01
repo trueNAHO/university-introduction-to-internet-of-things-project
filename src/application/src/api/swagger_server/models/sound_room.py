@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class SoundRoom(Model):
@@ -15,7 +15,8 @@ class SoundRoom(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, sound_values: List[SoundValue]=None):  # noqa: E501
+
+    def __init__(self, name: str = None, sound_values: List[SoundValue] = None):  # noqa: E501
         """SoundRoom - a model defined in Swagger
 
         :param name: The name of this SoundRoom.  # noqa: E501
@@ -23,20 +24,14 @@ class SoundRoom(Model):
         :param sound_values: The sound_values of this SoundRoom.  # noqa: E501
         :type sound_values: List[SoundValue]
         """
-        self.swagger_types = {
-            'name': str,
-            'sound_values': List[SoundValue]
-        }
+        self.swagger_types = {"name": str, "sound_values": List[SoundValue]}
 
-        self.attribute_map = {
-            'name': 'name',
-            'sound_values': 'sound_values'
-        }
+        self.attribute_map = {"name": "name", "sound_values": "sound_values"}
         self._name = name
         self._sound_values = sound_values
 
     @classmethod
-    def from_dict(cls, dikt) -> 'SoundRoom':
+    def from_dict(cls, dikt) -> "SoundRoom":
         """Returns the dict as a model
 
         :param dikt: A dict.

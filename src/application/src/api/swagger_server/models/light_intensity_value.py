@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class LightIntensityValue(Model):
@@ -14,7 +14,8 @@ class LightIntensityValue(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, timestamp: datetime=None, light_intensity: float=None):  # noqa: E501
+
+    def __init__(self, timestamp: datetime = None, light_intensity: float = None):  # noqa: E501
         """LightIntensityValue - a model defined in Swagger
 
         :param timestamp: The timestamp of this LightIntensityValue.  # noqa: E501
@@ -22,20 +23,17 @@ class LightIntensityValue(Model):
         :param light_intensity: The light_intensity of this LightIntensityValue.  # noqa: E501
         :type light_intensity: float
         """
-        self.swagger_types = {
-            'timestamp': datetime,
-            'light_intensity': float
-        }
+        self.swagger_types = {"timestamp": datetime, "light_intensity": float}
 
         self.attribute_map = {
-            'timestamp': 'timestamp',
-            'light_intensity': 'light_intensity'
+            "timestamp": "timestamp",
+            "light_intensity": "light_intensity",
         }
         self._timestamp = timestamp
         self._light_intensity = light_intensity
 
     @classmethod
-    def from_dict(cls, dikt) -> 'LightIntensityValue':
+    def from_dict(cls, dikt) -> "LightIntensityValue":
         """Returns the dict as a model
 
         :param dikt: A dict.

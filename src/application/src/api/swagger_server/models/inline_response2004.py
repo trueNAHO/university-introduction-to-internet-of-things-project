@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse2004(Model):
@@ -15,7 +15,10 @@ class InlineResponse2004(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, humidity_data: List[HumidityValue]=None):  # noqa: E501
+
+    def __init__(
+        self, room_name: str = None, humidity_data: List[HumidityValue] = None
+    ):  # noqa: E501
         """InlineResponse2004 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2004.  # noqa: E501
@@ -23,20 +26,17 @@ class InlineResponse2004(Model):
         :param humidity_data: The humidity_data of this InlineResponse2004.  # noqa: E501
         :type humidity_data: List[HumidityValue]
         """
-        self.swagger_types = {
-            'room_name': str,
-            'humidity_data': List[HumidityValue]
-        }
+        self.swagger_types = {"room_name": str, "humidity_data": List[HumidityValue]}
 
         self.attribute_map = {
-            'room_name': 'room_name',
-            'humidity_data': 'humidity_data'
+            "room_name": "room_name",
+            "humidity_data": "humidity_data",
         }
         self._room_name = room_name
         self._humidity_data = humidity_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2004':
+    def from_dict(cls, dikt) -> "InlineResponse2004":
         """Returns the dict as a model
 
         :param dikt: A dict.

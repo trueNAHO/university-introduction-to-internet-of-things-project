@@ -1,9 +1,6 @@
 /.direnv/
 /.pre-commit-config.yaml
 /src/application/src/venv/
+__pycache__/
 result
 result-*
-src/application/src/swagger_server/__pycache__
-src/application/src/swagger_server/__pycache__
-src/application/src/swagger_server/controllers/__pycache__
-src/application/src/swagger_server/models/__pycache__

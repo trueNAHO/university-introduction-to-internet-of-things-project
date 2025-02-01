@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class AirQualityValue(Model):
@@ -14,7 +14,10 @@ class AirQualityValue(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, timestamp: datetime=None, pm2_5: float=None, pm10: float=None):  # noqa: E501
+
+    def __init__(
+        self, timestamp: datetime = None, pm2_5: float = None, pm10: float = None
+    ):  # noqa: E501
         """AirQualityValue - a model defined in Swagger
 
         :param timestamp: The timestamp of this AirQualityValue.  # noqa: E501
@@ -24,23 +27,19 @@ class AirQualityValue(Model):
         :param pm10: The pm10 of this AirQualityValue.  # noqa: E501
         :type pm10: float
         """
-        self.swagger_types = {
-            'timestamp': datetime,
-            'pm2_5': float,
-            'pm10': float
-        }
+        self.swagger_types = {"timestamp": datetime, "pm2_5": float, "pm10": float}
 
         self.attribute_map = {
-            'timestamp': 'timestamp',
-            'pm2_5': 'PM2.5',
-            'pm10': 'PM10'
+            "timestamp": "timestamp",
+            "pm2_5": "PM2.5",
+            "pm10": "PM10",
         }
         self._timestamp = timestamp
         self._pm2_5 = pm2_5
         self._pm10 = pm10
 
     @classmethod
-    def from_dict(cls, dikt) -> 'AirQualityValue':
+    def from_dict(cls, dikt) -> "AirQualityValue":
         """Returns the dict as a model
 
         :param dikt: A dict.

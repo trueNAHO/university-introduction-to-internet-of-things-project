@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse2005(Model):
@@ -15,7 +15,12 @@ class InlineResponse2005(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, light_intensity_data: List[LightIntensityValue]=None):  # noqa: E501
+
+    def __init__(
+        self,
+        room_name: str = None,
+        light_intensity_data: List[LightIntensityValue] = None,
+    ):  # noqa: E501
         """InlineResponse2005 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2005.  # noqa: E501
@@ -24,19 +29,19 @@ class InlineResponse2005(Model):
         :type light_intensity_data: List[LightIntensityValue]
         """
         self.swagger_types = {
-            'room_name': str,
-            'light_intensity_data': List[LightIntensityValue]
+            "room_name": str,
+            "light_intensity_data": List[LightIntensityValue],
         }
 
         self.attribute_map = {
-            'room_name': 'room_name',
-            'light_intensity_data': 'light_intensity_data'
+            "room_name": "room_name",
+            "light_intensity_data": "light_intensity_data",
         }
         self._room_name = room_name
         self._light_intensity_data = light_intensity_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2005':
+    def from_dict(cls, dikt) -> "InlineResponse2005":
         """Returns the dict as a model
 
         :param dikt: A dict.

@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class SoundValue(Model):
@@ -14,7 +14,8 @@ class SoundValue(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, timestamp: datetime=None, sound_level: float=None):  # noqa: E501
+
+    def __init__(self, timestamp: datetime = None, sound_level: float = None):  # noqa: E501
         """SoundValue - a model defined in Swagger
 
         :param timestamp: The timestamp of this SoundValue.  # noqa: E501
@@ -22,20 +23,14 @@ class SoundValue(Model):
         :param sound_level: The sound_level of this SoundValue.  # noqa: E501
         :type sound_level: float
         """
-        self.swagger_types = {
-            'timestamp': datetime,
-            'sound_level': float
-        }
+        self.swagger_types = {"timestamp": datetime, "sound_level": float}
 
-        self.attribute_map = {
-            'timestamp': 'timestamp',
-            'sound_level': 'sound_level'
-        }
+        self.attribute_map = {"timestamp": "timestamp", "sound_level": "sound_level"}
         self._timestamp = timestamp
         self._sound_level = sound_level
 
     @classmethod
-    def from_dict(cls, dikt) -> 'SoundValue':
+    def from_dict(cls, dikt) -> "SoundValue":
         """Returns the dict as a model
 
         :param dikt: A dict.

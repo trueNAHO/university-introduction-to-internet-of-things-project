@@ -2,6 +2,7 @@
 
 # flake8: noqa
 from __future__ import absolute_import
+
 # import models into model package
 from swagger_server.models.air_quality_room import AirQualityRoom
 from swagger_server.models.air_quality_value import AirQualityValue
@@ -12,6 +13,8 @@ from swagger_server.models.facility_rooms_rooms import FacilityRoomsRooms
 from swagger_server.models.humidity_room import HumidityRoom
 from swagger_server.models.humidity_value import HumidityValue
 from swagger_server.models.inline_response200 import InlineResponse200
+from swagger_server.models.inline_response201 import InlineResponse201
+from swagger_server.models.inline_response201_room import InlineResponse201Room
 from swagger_server.models.inline_response2001 import InlineResponse2001
 from swagger_server.models.inline_response2002 import InlineResponse2002
 from swagger_server.models.inline_response2003 import InlineResponse2003
@@ -21,8 +24,6 @@ from swagger_server.models.inline_response2006 import InlineResponse2006
 from swagger_server.models.inline_response2007 import InlineResponse2007
 from swagger_server.models.inline_response2008 import InlineResponse2008
 from swagger_server.models.inline_response2009 import InlineResponse2009
-from swagger_server.models.inline_response201 import InlineResponse201
-from swagger_server.models.inline_response201_room import InlineResponse201Room
 from swagger_server.models.light_intensity_room import LightIntensityRoom
 from swagger_server.models.light_intensity_value import LightIntensityValue
 from swagger_server.models.room_facilities import RoomFacilities
