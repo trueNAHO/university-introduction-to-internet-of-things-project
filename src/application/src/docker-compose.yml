@@ -9,7 +9,7 @@ services:
       - MONGO_INITDB_DATABASE=Temp_DB
     volumes:
       - mongo_data:/data/db                             # persistent MongoDB storage
-      - ./Project_sensor_data:/data/Project_sensor_data:ro  # mount sensor data (read-only)
+      - ../assests:/data/Project_sensor_data:ro  # mount sensor data (read-only)
       - ./import-data.sh:/docker-entrypoint-initdb.d/import-data.sh:ro  # initialization script
     networks:
       - iot-network
