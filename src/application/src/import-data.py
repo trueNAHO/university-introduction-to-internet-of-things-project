@@ -26,7 +26,7 @@ if __name__ == '__main__':
     mongo_import('air_quality', '/data/Project_sensor_data/air_quality_sensor_data.json')
     mongo_import('co2', '/data/Project_sensor_data/co2_sensor_data.json')
     mongo_import('humidity', '/data/Project_sensor_data/humidity_sensor_data.json')
-    mongo_import('light_intensity', '/data/Project_sensor_data/LightIntensity_sensor_data.json')
+    mongo_import('light_intensity', '/data/Project_sensor_data/light_intensity_sensor_data.json')
     mongo_import('room_facilities', '/data/Project_sensor_data/room_facilities_data.json')
     mongo_import('sound', '/data/Project_sensor_data/sound_sensor_data.json')
     mongo_import('temperature', '/data/Project_sensor_data/temperature_sensor_data.json')
