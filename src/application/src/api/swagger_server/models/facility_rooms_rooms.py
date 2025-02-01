@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.room_facilities import RoomFacilities  # noqa: F401,E501
-from swagger_server import util
 
 
 class FacilityRoomsRooms(Model):
@@ -15,7 +15,8 @@ class FacilityRoomsRooms(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, facilities: RoomFacilities=None):  # noqa: E501
+
+    def __init__(self, name: str = None, facilities: RoomFacilities = None):  # noqa: E501
         """FacilityRoomsRooms - a model defined in Swagger
 
         :param name: The name of this FacilityRoomsRooms.  # noqa: E501
@@ -23,20 +24,14 @@ class FacilityRoomsRooms(Model):
         :param facilities: The facilities of this FacilityRoomsRooms.  # noqa: E501
         :type facilities: RoomFacilities
         """
-        self.swagger_types = {
-            'name': str,
-            'facilities': RoomFacilities
-        }
+        self.swagger_types = {"name": str, "facilities": RoomFacilities}
 
-        self.attribute_map = {
-            'name': 'name',
-            'facilities': 'facilities'
-        }
+        self.attribute_map = {"name": "name", "facilities": "facilities"}
         self._name = name
         self._facilities = facilities
 
     @classmethod
-    def from_dict(cls, dikt) -> 'FacilityRoomsRooms':
+    def from_dict(cls, dikt) -> "FacilityRoomsRooms":
         """Returns the dict as a model
 
         :param dikt: A dict.

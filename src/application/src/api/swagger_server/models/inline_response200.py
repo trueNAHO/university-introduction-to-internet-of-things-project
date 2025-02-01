@@ -1,12 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
+from swagger_server import util
 from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
+from swagger_server.models.base_model_ import Model
 from swagger_server.models.co2_value import CO2Value  # noqa: F401,E501
 from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
 from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: F401,E501
@@ -14,7 +15,6 @@ from swagger_server.models.room_facilities import RoomFacilities  # noqa: F401,E
 from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
 from swagger_server.models.temperature_value import TemperatureValue  # noqa: F401,E501
 from swagger_server.models.voc_value import VOCValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse200(Model):
@@ -22,7 +22,19 @@ class InlineResponse200(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, air_quality: AirQualityValue=None, co2: CO2Value=None, humidity: HumidityValue=None, light_intensity: LightIntensityValue=None, sound: SoundValue=None, temperature: TemperatureValue=None, voc: VOCValue=None, room_facilites: RoomFacilities=None):  # noqa: E501
+
+    def __init__(
+        self,
+        name: str = None,
+        air_quality: AirQualityValue = None,
+        co2: CO2Value = None,
+        humidity: HumidityValue = None,
+        light_intensity: LightIntensityValue = None,
+        sound: SoundValue = None,
+        temperature: TemperatureValue = None,
+        voc: VOCValue = None,
+        room_facilites: RoomFacilities = None,
+    ):  # noqa: E501
         """InlineResponse200 - a model defined in Swagger
 
         :param name: The name of this InlineResponse200.  # noqa: E501
@@ -45,27 +57,27 @@ class InlineResponse200(Model):
         :type room_facilites: RoomFacilities
         """
         self.swagger_types = {
-            'name': str,
-            'air_quality': AirQualityValue,
-            'co2': CO2Value,
-            'humidity': HumidityValue,
-            'light_intensity': LightIntensityValue,
-            'sound': SoundValue,
-            'temperature': TemperatureValue,
-            'voc': VOCValue,
-            'room_facilites': RoomFacilities
+            "name": str,
+            "air_quality": AirQualityValue,
+            "co2": CO2Value,
+            "humidity": HumidityValue,
+            "light_intensity": LightIntensityValue,
+            "sound": SoundValue,
+            "temperature": TemperatureValue,
+            "voc": VOCValue,
+            "room_facilites": RoomFacilities,
         }
 
         self.attribute_map = {
-            'name': 'name',
-            'air_quality': 'Air_Quality',
-            'co2': 'CO2',
-            'humidity': 'Humidity',
-            'light_intensity': 'Light_Intensity',
-            'sound': 'Sound',
-            'temperature': 'Temperature',
-            'voc': 'VOC',
-            'room_facilites': 'Room_facilites'
+            "name": "name",
+            "air_quality": "Air_Quality",
+            "co2": "CO2",
+            "humidity": "Humidity",
+            "light_intensity": "Light_Intensity",
+            "sound": "Sound",
+            "temperature": "Temperature",
+            "voc": "VOC",
+            "room_facilites": "Room_facilites",
         }
         self._name = name
         self._air_quality = air_quality
@@ -78,7 +90,7 @@ class InlineResponse200(Model):
         self._room_facilites = room_facilites
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse200':
+    def from_dict(cls, dikt) -> "InlineResponse200":
         """Returns the dict as a model
 
         :param dikt: A dict.

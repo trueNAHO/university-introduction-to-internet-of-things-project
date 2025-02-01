@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
-from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
 from swagger_server import util
+from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
+from swagger_server.models.base_model_ import Model
 
 
 class InlineResponse2002(Model):
@@ -15,7 +15,10 @@ class InlineResponse2002(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, air_quality_data: List[AirQualityValue]=None):  # noqa: E501
+
+    def __init__(
+        self, room_name: str = None, air_quality_data: List[AirQualityValue] = None
+    ):  # noqa: E501
         """InlineResponse2002 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2002.  # noqa: E501
@@ -24,19 +27,19 @@ class InlineResponse2002(Model):
         :type air_quality_data: List[AirQualityValue]
         """
         self.swagger_types = {
-            'room_name': str,
-            'air_quality_data': List[AirQualityValue]
+            "room_name": str,
+            "air_quality_data": List[AirQualityValue],
         }
 
         self.attribute_map = {
-            'room_name': 'room_name',
-            'air_quality_data': 'air_quality_data'
+            "room_name": "room_name",
+            "air_quality_data": "air_quality_data",
         }
         self._room_name = room_name
         self._air_quality_data = air_quality_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2002':
+    def from_dict(cls, dikt) -> "InlineResponse2002":
         """Returns the dict as a model
 
         :param dikt: A dict.

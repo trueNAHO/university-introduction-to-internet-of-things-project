@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class HumidityRoom(Model):
@@ -15,7 +15,8 @@ class HumidityRoom(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, humidity_values: List[HumidityValue]=None):  # noqa: E501
+
+    def __init__(self, name: str = None, humidity_values: List[HumidityValue] = None):  # noqa: E501
         """HumidityRoom - a model defined in Swagger
 
         :param name: The name of this HumidityRoom.  # noqa: E501
@@ -23,20 +24,14 @@ class HumidityRoom(Model):
         :param humidity_values: The humidity_values of this HumidityRoom.  # noqa: E501
         :type humidity_values: List[HumidityValue]
         """
-        self.swagger_types = {
-            'name': str,
-            'humidity_values': List[HumidityValue]
-        }
+        self.swagger_types = {"name": str, "humidity_values": List[HumidityValue]}
 
-        self.attribute_map = {
-            'name': 'name',
-            'humidity_values': 'humidity_values'
-        }
+        self.attribute_map = {"name": "name", "humidity_values": "humidity_values"}
         self._name = name
         self._humidity_values = humidity_values
 
     @classmethod
-    def from_dict(cls, dikt) -> 'HumidityRoom':
+    def from_dict(cls, dikt) -> "HumidityRoom":
         """Returns the dict as a model
 
         :param dikt: A dict.

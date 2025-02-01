@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class RoomFacilities(Model):
@@ -14,7 +14,14 @@ class RoomFacilities(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, videoprojector: bool=None, seating_capacity: int=None, computers: int=None, robots_for_training: int=None):  # noqa: E501
+
+    def __init__(
+        self,
+        videoprojector: bool = None,
+        seating_capacity: int = None,
+        computers: int = None,
+        robots_for_training: int = None,
+    ):  # noqa: E501
         """RoomFacilities - a model defined in Swagger
 
         :param videoprojector: The videoprojector of this RoomFacilities.  # noqa: E501
@@ -27,17 +34,17 @@ class RoomFacilities(Model):
         :type robots_for_training: int
         """
         self.swagger_types = {
-            'videoprojector': bool,
-            'seating_capacity': int,
-            'computers': int,
-            'robots_for_training': int
+            "videoprojector": bool,
+            "seating_capacity": int,
+            "computers": int,
+            "robots_for_training": int,
         }
 
         self.attribute_map = {
-            'videoprojector': 'videoprojector',
-            'seating_capacity': 'seating_capacity',
-            'computers': 'computers',
-            'robots_for_training': 'robots_for_training'
+            "videoprojector": "videoprojector",
+            "seating_capacity": "seating_capacity",
+            "computers": "computers",
+            "robots_for_training": "robots_for_training",
         }
         self._videoprojector = videoprojector
         self._seating_capacity = seating_capacity
@@ -45,7 +52,7 @@ class RoomFacilities(Model):
         self._robots_for_training = robots_for_training
 
     @classmethod
-    def from_dict(cls, dikt) -> 'RoomFacilities':
+    def from_dict(cls, dikt) -> "RoomFacilities":
         """Returns the dict as a model
 
         :param dikt: A dict.

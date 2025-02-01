@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.room_facilities import RoomFacilities  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse2009(Model):
@@ -15,7 +15,8 @@ class InlineResponse2009(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, room_facilities: RoomFacilities=None):  # noqa: E501
+
+    def __init__(self, room_name: str = None, room_facilities: RoomFacilities = None):  # noqa: E501
         """InlineResponse2009 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2009.  # noqa: E501
@@ -23,20 +24,17 @@ class InlineResponse2009(Model):
         :param room_facilities: The room_facilities of this InlineResponse2009.  # noqa: E501
         :type room_facilities: RoomFacilities
         """
-        self.swagger_types = {
-            'room_name': str,
-            'room_facilities': RoomFacilities
-        }
+        self.swagger_types = {"room_name": str, "room_facilities": RoomFacilities}
 
         self.attribute_map = {
-            'room_name': 'room_name',
-            'room_facilities': 'room_facilities'
+            "room_name": "room_name",
+            "room_facilities": "room_facilities",
         }
         self._room_name = room_name
         self._room_facilities = room_facilities
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2009':
+    def from_dict(cls, dikt) -> "InlineResponse2009":
         """Returns the dict as a model
 
         :param dikt: A dict.

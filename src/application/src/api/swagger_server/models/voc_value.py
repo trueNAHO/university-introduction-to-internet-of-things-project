@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class VOCValue(Model):
@@ -14,7 +14,8 @@ class VOCValue(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, timestamp: datetime=None, voc_level: float=None):  # noqa: E501
+
+    def __init__(self, timestamp: datetime = None, voc_level: float = None):  # noqa: E501
         """VOCValue - a model defined in Swagger
 
         :param timestamp: The timestamp of this VOCValue.  # noqa: E501
@@ -22,20 +23,14 @@ class VOCValue(Model):
         :param voc_level: The voc_level of this VOCValue.  # noqa: E501
         :type voc_level: float
         """
-        self.swagger_types = {
-            'timestamp': datetime,
-            'voc_level': float
-        }
+        self.swagger_types = {"timestamp": datetime, "voc_level": float}
 
-        self.attribute_map = {
-            'timestamp': 'timestamp',
-            'voc_level': 'VOC_level'
-        }
+        self.attribute_map = {"timestamp": "timestamp", "voc_level": "VOC_level"}
         self._timestamp = timestamp
         self._voc_level = voc_level
 
     @classmethod
-    def from_dict(cls, dikt) -> 'VOCValue':
+    def from_dict(cls, dikt) -> "VOCValue":
         """Returns the dict as a model
 
         :param dikt: A dict.

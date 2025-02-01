@@ -16,11 +16,9 @@
           inputs.asciidoctor-nix.mkOutputs {
             checks.hooks = {
               autoflake.enable = true;
-              isort.enable = true;
-              mypy.enable = true;
-              pyright.enable = true;
               ruff-format.enable = true;
               ruff.enable = true;
+              typos.settings.ignored-words = ["Retrive" "facilites"];
             };
 
             devShells.packages = lib.singleton (

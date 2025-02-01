@@ -1,13 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
+from swagger_server import util
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.voc_value import VOCValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse2008(Model):
@@ -15,7 +15,8 @@ class InlineResponse2008(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, room_name: str=None, voc_data: List[VOCValue]=None):  # noqa: E501
+
+    def __init__(self, room_name: str = None, voc_data: List[VOCValue] = None):  # noqa: E501
         """InlineResponse2008 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2008.  # noqa: E501
@@ -23,20 +24,14 @@ class InlineResponse2008(Model):
         :param voc_data: The voc_data of this InlineResponse2008.  # noqa: E501
         :type voc_data: List[VOCValue]
         """
-        self.swagger_types = {
-            'room_name': str,
-            'voc_data': List[VOCValue]
-        }
+        self.swagger_types = {"room_name": str, "voc_data": List[VOCValue]}
 
-        self.attribute_map = {
-            'room_name': 'room_name',
-            'voc_data': 'voc_data'
-        }
+        self.attribute_map = {"room_name": "room_name", "voc_data": "voc_data"}
         self._room_name = room_name
         self._voc_data = voc_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2008':
+    def from_dict(cls, dikt) -> "InlineResponse2008":
         """Returns the dict as a model
 
         :param dikt: A dict.

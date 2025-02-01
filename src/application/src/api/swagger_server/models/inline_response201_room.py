@@ -1,12 +1,13 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
+from swagger_server import util
 from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
+from swagger_server.models.base_model_ import Model
 from swagger_server.models.co2_value import CO2Value  # noqa: F401,E501
 from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
 from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: F401,E501
@@ -14,7 +15,6 @@ from swagger_server.models.room_facilities import RoomFacilities  # noqa: F401,E
 from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
 from swagger_server.models.temperature_value import TemperatureValue  # noqa: F401,E501
 from swagger_server.models.voc_value import VOCValue  # noqa: F401,E501
-from swagger_server import util
 
 
 class InlineResponse201Room(Model):
@@ -22,7 +22,19 @@ class InlineResponse201Room(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, air_quality_data: List[AirQualityValue]=None, co2_data: List[CO2Value]=None, humidity_data: List[HumidityValue]=None, light_intensity_data: List[LightIntensityValue]=None, sound_data: List[SoundValue]=None, temperature_data: List[TemperatureValue]=None, voc_data: List[VOCValue]=None, room_facilites_data: List[RoomFacilities]=None):  # noqa: E501
+
+    def __init__(
+        self,
+        name: str = None,
+        air_quality_data: List[AirQualityValue] = None,
+        co2_data: List[CO2Value] = None,
+        humidity_data: List[HumidityValue] = None,
+        light_intensity_data: List[LightIntensityValue] = None,
+        sound_data: List[SoundValue] = None,
+        temperature_data: List[TemperatureValue] = None,
+        voc_data: List[VOCValue] = None,
+        room_facilites_data: List[RoomFacilities] = None,
+    ):  # noqa: E501
         """InlineResponse201Room - a model defined in Swagger
 
         :param name: The name of this InlineResponse201Room.  # noqa: E501
@@ -45,27 +57,27 @@ class InlineResponse201Room(Model):
         :type room_facilites_data: List[RoomFacilities]
         """
         self.swagger_types = {
-            'name': str,
-            'air_quality_data': List[AirQualityValue],
-            'co2_data': List[CO2Value],
-            'humidity_data': List[HumidityValue],
-            'light_intensity_data': List[LightIntensityValue],
-            'sound_data': List[SoundValue],
-            'temperature_data': List[TemperatureValue],
-            'voc_data': List[VOCValue],
-            'room_facilites_data': List[RoomFacilities]
+            "name": str,
+            "air_quality_data": List[AirQualityValue],
+            "co2_data": List[CO2Value],
+            "humidity_data": List[HumidityValue],
+            "light_intensity_data": List[LightIntensityValue],
+            "sound_data": List[SoundValue],
+            "temperature_data": List[TemperatureValue],
+            "voc_data": List[VOCValue],
+            "room_facilites_data": List[RoomFacilities],
         }
 
         self.attribute_map = {
-            'name': 'name',
-            'air_quality_data': 'Air_Quality_Data',
-            'co2_data': 'CO2_Data',
-            'humidity_data': 'Humidity_Data',
-            'light_intensity_data': 'Light_Intensity_Data',
-            'sound_data': 'Sound_Data',
-            'temperature_data': 'Temperature_Data',
-            'voc_data': 'VOC_Data',
-            'room_facilites_data': 'Room_facilites_Data'
+            "name": "name",
+            "air_quality_data": "Air_Quality_Data",
+            "co2_data": "CO2_Data",
+            "humidity_data": "Humidity_Data",
+            "light_intensity_data": "Light_Intensity_Data",
+            "sound_data": "Sound_Data",
+            "temperature_data": "Temperature_Data",
+            "voc_data": "VOC_Data",
+            "room_facilites_data": "Room_facilites_Data",
         }
         self._name = name
         self._air_quality_data = air_quality_data
@@ -78,7 +90,7 @@ class InlineResponse201Room(Model):
         self._room_facilites_data = room_facilites_data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse201Room':
+    def from_dict(cls, dikt) -> "InlineResponse201Room":
         """Returns the dict as a model
 
         :param dikt: A dict.

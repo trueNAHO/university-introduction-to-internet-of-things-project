@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 from datetime import date, datetime  # noqa: F401
+from typing import Dict, List  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
-
-from swagger_server.models.base_model_ import Model
 from swagger_server import util
+from swagger_server.models.base_model_ import Model
 
 
 class InlineResponse2001(Model):
@@ -14,7 +14,8 @@ class InlineResponse2001(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, old_name: str=None, updated_name: str=None):  # noqa: E501
+
+    def __init__(self, old_name: str = None, updated_name: str = None):  # noqa: E501
         """InlineResponse2001 - a model defined in Swagger
 
         :param old_name: The old_name of this InlineResponse2001.  # noqa: E501
@@ -22,20 +23,14 @@ class InlineResponse2001(Model):
         :param updated_name: The updated_name of this InlineResponse2001.  # noqa: E501
         :type updated_name: str
         """
-        self.swagger_types = {
-            'old_name': str,
-            'updated_name': str
-        }
+        self.swagger_types = {"old_name": str, "updated_name": str}
 
-        self.attribute_map = {
-            'old_name': 'old_name',
-            'updated_name': 'updated_name'
-        }
+        self.attribute_map = {"old_name": "old_name", "updated_name": "updated_name"}
         self._old_name = old_name
         self._updated_name = updated_name
 
     @classmethod
-    def from_dict(cls, dikt) -> 'InlineResponse2001':
+    def from_dict(cls, dikt) -> "InlineResponse2001":
         """Returns the dict as a model
 
         :param dikt: A dict.
