@@ -6,7 +6,7 @@ To install the virtual environment, run:
 
 ```console
 python -m venv "$VIRTUAL_ENVIRONMENT"
-source "$VIRTUAL_ENVIRONMENT/venv/bin/activate"
+source "$VIRTUAL_ENVIRONMENT/bin/activate"
 pip3 install -r requirements.txt
 ```
 
