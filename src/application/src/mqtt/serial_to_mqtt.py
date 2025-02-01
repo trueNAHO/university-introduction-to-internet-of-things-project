@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 ser = serial.Serial('/dev/ttyACM0', 9600)  # Adjust port if needed
 
 # Set up MQTT client
-mqtt_broker = "localhost"  # Change if your broker is running elsewhere
+mqtt_broker = "mqtt-broker"  # Change if your broker is running elsewhere
 mqtt_port = 1883
 client = mqtt.Client()
 client.connect(mqtt_broker, mqtt_port, 60)

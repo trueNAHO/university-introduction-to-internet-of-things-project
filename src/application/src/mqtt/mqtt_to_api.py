@@ -4,12 +4,12 @@ import json
 from datetime import datetime, timezone  # Import timezone for aware timestamps
 
 # MQTT Broker Details
-MQTT_BROKER = "localhost"  # Change if your broker is on another machine
+MQTT_BROKER = "mqtt-broker"  # Change if your broker is on another machine
 MQTT_PORT = 1883
 MQTT_TOPIC = "+/sensor/#"  # Corrected subscription filter
 
 # API Endpoint (Replace with your actual API URL)
-API_BASE_URL = "http://localhost:8087/"  # Example API URL
+API_BASE_URL = "http://backend-api:8087/"  # Example API URL
 
 # MQTT Callback - On Message Received
 def on_message(client, userdata, message):
