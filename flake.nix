@@ -22,7 +22,9 @@
             };
 
             devShells.packages = lib.singleton (
-              pkgs.python3.withPackages (_: [])
+              pkgs.python3.withPackages (
+                ps: with ps; [connexion flask flask-pymongo]
+              )
             );
 
             packages = {
