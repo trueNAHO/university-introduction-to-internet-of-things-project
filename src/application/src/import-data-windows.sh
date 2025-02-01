@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 mongo_import() {
   mongoimport --db Temp_DB --collection "$1" --file "$2"
