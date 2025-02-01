@@ -15,6 +15,7 @@ services:
       # initialization script
       - ./src/import-data.sh:/docker-entrypoint-initdb.d/import-data.sh:ro
       - ./src/import-data-windows.py:/docker-entrypoint-initdb.d/import-data-windows.py:ro
+      - ./src/import-data.py:/docker-entrypoint-initdb.d/import-data.py:ro
     networks:
       - iot-network
 
