@@ -1,0 +1,33 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=Temp_DB
+    volumes:
+      - mongo_data:/data/db                             # persistent MongoDB storage
+      - ./Project_sensor_data:/data/Project_sensor_data:ro  # mount sensor data (read-only)
+      - ./import-data.sh:/docker-entrypoint-initdb.d/import-data.sh:ro  # initialization script
+    networks:
+      - iot-network
+
+  backend-api:
+    build: ./python-flask-server-generated
+    container_name: backend-api
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "5000:5000"
+    networks:
+      - iot-network
+
+networks:
+  iot-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
