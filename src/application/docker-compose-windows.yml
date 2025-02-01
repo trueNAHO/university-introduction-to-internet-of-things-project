@@ -13,7 +13,8 @@ services:
       # mount sensor data (read-only)
       - ./assets:/data/Project_sensor_data:ro
       # initialization script
-      - ./src/import-data-windows.sh:/docker-entrypoint-initdb.d/import-data.sh:ro
+      - ./src/import-data.sh:/docker-entrypoint-initdb.d/import-data.sh:ro
+      - ./src/import-data-windows.py:/docker-entrypoint-initdb.d/import-data-windows.py:ro
     networks:
       - iot-network
 
