@@ -25,43 +25,43 @@ services:
     networks:
       - iot-network
 
-  mqtt-broker:
-    image: eclipse-mosquitto:latest
-    container_name: mqtt-broker
-    restart: always
-    volumes:
-      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-    ports:
-      - "1883:1883"
-      - "9001:9001"
-    networks:
-      - iot-network
-
-  mqtt-serial:
-    build:
-      context: ./mqtt
-      target: serial
-    container_name: mqtt-serial
-    restart: always
-    depends_on:
-      - mqtt-broker
-    # Map the host's USB device (adjust the device path if necessary)
-    devices:
-      - "/dev/ttyACM0:/dev/ttyACM0"   # or "/dev/ttyACM0:/dev/ttyACM0"
-    networks:
-      - iot-network
-
-  mqtt-to-api:
-    build:
-      context: ./mqtt
-      target: toapi
-    container_name: mqtt-to-api
-    restart: always
-    depends_on:
-      - mqtt-broker
-      - backend-api
-    networks:
-      - iot-network
+#  mqtt-broker:
+#    image: eclipse-mosquitto:latest
+#    container_name: mqtt-broker
+#    restart: always
+#    volumes:
+#      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+#    ports:
+#      - "1883:1883"
+#      - "9001:9001"
+#    networks:
+#      - iot-network
+#
+#  mqtt-serial:
+#    build:
+#      context: ./mqtt
+#      target: serial
+#    container_name: mqtt-serial
+#    restart: always
+#    depends_on:
+#      - mqtt-broker
+#    # Map the host's USB device (adjust the device path if necessary)
+#    devices:
+#      - "/dev/ttyACM0:/dev/ttyACM0"   # or "/dev/ttyACM0:/dev/ttyACM0"
+#    networks:
+#      - iot-network
+#
+#  mqtt-to-api:
+#    build:
+#      context: ./mqtt
+#      target: toapi
+#    container_name: mqtt-to-api
+#    restart: always
+#    depends_on:
+#      - mqtt-broker
+#      - backend-api
+#    networks:
+#      - iot-network
 
 networks:
   iot-network:
