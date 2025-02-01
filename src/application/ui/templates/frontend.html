@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Room Selection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Room Selection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
+    <div id="intro-page" class="text-center w-full max-w-6xl bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-5xl font-bold mb-6">Room Selection Decision Support System</h1>
+        <div class="flex border-b mb-4">
+            <button onclick="showTab('room-selection')" class="tab-button px-4 py-2 text-lg font-bold bg-blue-500 text-white">Room Selection</button>
+            <button onclick="showTab('swagger-docs')" class="tab-button px-4 py-2 text-lg font-bold bg-gray-300">API Documentation</button>
+        </div>
+        <div id="room-selection" class="tab-content p-4">
+            <button onclick="showSelectionPage()" class="px-6 py-3 bg-blue-500 text-white text-xl rounded">Select Room</button>
+        </div>
+        <div id="swagger-docs" class="tab-content p-4 hidden">
+            <h1 class="text-2xl font-bold mb-4">API Documentation</h1>
+            <iframe src="/swagger" class="w-full h-96 border rounded"></iframe>
+        </div>
+    </div>
+    
+
+    <div id="selection-page" class="hidden w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Room Selection System</h1>
+        <button onclick="goBack()" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded">Back</button>
+        <div class="flex gap-6">
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Set Preferences</h2>
+                <label>Temperature Importance: <input type="number" id="temp_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Humidity Importance: <input type="number" id="humidity_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Light Importance: <input type="number" id="light_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Air Quality Importance: <input type="number" id="aqi_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+            </div>
+            
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Desired Room Profile</h2>
+                <label>Temperature (°C): <input type="number" id="desired_temp" value="22" class="border p-1 rounded w-full"></label>
+                <label>Humidity (%): <input type="number" id="desired_humidity" value="50" class="border p-1 rounded w-full"></label>
+                <label>Light (lux): <input type="number" id="desired_light" value="300" class="border p-1 rounded w-full"></label>
+                <label>AQI: <input type="number" id="desired_aqi" value="50" class="border p-1 rounded w-full"></label>
+            </div>
+            
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Facility Preferences</h2>
+                <label>Seating Capacity: <input type="number" id="min_seating" value="10" class="border p-1 rounded w-full"></label>
+                <label>Computers Needed: <input type="number" id="min_computers" value="0" class="border p-1 rounded w-full"></label>
+                <label>Robots Needed: <input type="number" id="min_robots" value="0" class="border p-1 rounded w-full"></label>
+                <label>Videoprojector: <input type="checkbox" id="require_videoprojector"></label>
+            </div>
+        </div>
+
+        <button onclick="fetchRankings()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded">Rank Rooms</button>
+        <ul id="room-list" class="mt-5"></ul>
+        <button id="change-button" onclick="showSelectionPage()" class="hidden mt-4 px-4 py-2 bg-gray-500 text-white rounded">Change Preferences</button>
+    </div>
+
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.replace('bg-blue-500', 'bg-gray-300'));
+            event.target.classList.replace('bg-gray-300', 'bg-blue-500');
+        }
+        function goBack() {
+            document.getElementById("selection-page").classList.add("hidden");
+            document.getElementById("intro-page").classList.remove("hidden");
+        }
+        function showSelectionPage() {
+            document.getElementById("intro-page").classList.add("hidden");
+            document.getElementById("selection-page").classList.remove("hidden");
+        }
+        function fetchRankings() {
+            let preferences = {
+                temperature: parseInt(document.getElementById("temp_importance").value),
+                humidity: parseInt(document.getElementById("humidity_importance").value),
+                light: parseInt(document.getElementById("light_importance").value),
+                air_quality: parseInt(document.getElementById("aqi_importance").value),
+            };
+
+            let profile = {
+                temperature: parseFloat(document.getElementById("desired_temp").value),
+                humidity: parseFloat(document.getElementById("desired_humidity").value),
+                light: parseFloat(document.getElementById("desired_light").value),
+                air_quality: parseFloat(document.getElementById("desired_aqi").value),
+                seating_capacity: parseInt(document.getElementById("min_seating").value),
+                computers: parseInt(document.getElementById("min_computers").value),
+                robots_for_training: parseInt(document.getElementById("min_robots").value),
+                videoprojector: document.getElementById("require_videoprojector").checked
+            };
+
+            if (profile.temperature < 10 || profile.temperature > 35) {
+                alert("Error: Temperature should be between 10-35°C!");
+                return;
+            }
+            if (profile.humidity < 20 || profile.humidity > 90) {
+                alert("Error: Humidity should be between 20-90%!");
+                return;
+            }
+            if (profile.light < 100 || profile.light > 1000) {
+                alert("Error: Light should be between 100-1000 lux!");
+                return;
+            }
+            if (profile.air_quality < 0 || profile.air_quality > 500) {
+                alert("Error: AQI should be between 0-500!");
+                return;
+            }
+
+            fetch('/api/room_ranking', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ preferences, profile })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let list = document.getElementById("room-list");
+                list.innerHTML = ""; 
+
+                if (data.length === 0) {
+                    list.innerHTML = "<li class='alert'> No rooms match your preferences.</li>";
+                    return;
+                }
+
+                data.forEach((room, index) => {
+                    let facilities = [];
+                    if (room.facilities.videoprojector) facilities.push("Videoprojector");
+                    facilities.push(`Seats: ${room.facilities.seating_capacity}`);
+                    if (room.facilities.computers) facilities.push(`Computers: ${room.facilities.computers}`);
+                    if (room.facilities.robots_for_training) facilities.push(`Robots: ${room.facilities.robots_for_training}`);
+
+                    list.innerHTML += `
+                        <li class='p-2 border bg-white rounded mb-2'>
+                            <span class='font-bold'>Rank ${index + 1}:</span> ${room.name} 
+                            <span class='text-gray-600'>| Temp: ${room.temperature}°C | Humidity: ${room.humidity}% | Light: ${room.light} lux | AQI: ${room.air_quality}</span>
+                            <br><span class='text-gray-700'>Facilities: ${facilities.join(", ")}</span>
+                        </li>`;
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching rankings:", error);
+                alert("Server error. Please try again later.");
+            });
+        }
+    </script>
+</body>
+</html>
