@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <button onclick="fetchRankings()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded">Rank Rooms</button>
+        <button id="rank-button" onclick="fetchAndRankRooms()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded">Rank Rooms</button>
         <ul id="room-list" class="mt-5"></ul>
         <button id="change-button" onclick="showSelectionPage()" class="hidden mt-4 px-4 py-2 bg-gray-500 text-white rounded">Change Preferences</button>
     </div>
@@ -83,237 +83,223 @@
             document.getElementById("selection-page").classList.remove("hidden");
         }
 
-        async function fetchRankings() {
-    // Get user preferences for criteria weighting
-  		  let preferences = {
-  		    temperature: parseInt(document.getElementById("temp_importance").value),
-  		    humidity: parseInt(document.getElementById("humidity_importance").value),
-  		    light: parseInt(document.getElementById("light_importance").value),
-  		    air_quality: parseInt(document.getElementById("aqi_importance").value),
-  		  };
-
-  		  // Get desired room profile
-  		  let profile = {
-  		    temperature: parseFloat(document.getElementById("desired_temp").value),
-  		    humidity: parseFloat(document.getElementById("desired_humidity").value),
-  		    light: parseFloat(document.getElementById("desired_light").value),
-  		    air_quality: parseFloat(document.getElementById("desired_aqi").value),
-  		    seating_capacity: parseInt(document.getElementById("min_seating").value),
-  		    computers: parseInt(document.getElementById("min_computers").value),
-  		    robots_for_training: parseInt(document.getElementById("min_robots").value),
-  		    videoprojector: document.getElementById("require_videoprojector").checked
-  		  };
-
-  		  // Basic input validation for environment parameters
-  		  if (profile.temperature < 10 || profile.temperature > 35) {
-  		    alert("Error: Temperature should be between 10-35°C!");
-  		    return;
-  		  }
-  		  if (profile.humidity < 40 || profile.humidity > 60) {
-  		    alert("Error: Humidity should be between 40-60%");
-  		    return;
-  		  }
-  		  if (profile.light < 100 || profile.light > 1000) {
-  		    alert("Error: Light should be between 100-1000 lux!");
-  		    return;
-  		  }
-  		  if (profile.air_quality < 0 || profile.air_quality > 500) {
-  		    alert("Error: AQI should be between 0-500!");
-  		    return;
-  		  }
-
-  		  try {
-  		    // 1. Fetch the list of room names
-  		    const namesResponse = await fetch(API_URL + '/RoomList/Names');
-  		    const roomNames = await namesResponse.json(); // e.g. [ "Room_1", "Room_2", ... ]
-
-  		    // 2. Fetch details for each room concurrently
-  		    const roomDataPromises = roomNames.map(name =>
-  		      fetch(API_URL + '/Rooms/Last/' + name).then(response => response.json())
-  		    );
-  		    const rooms = await Promise.all(roomDataPromises);
-
-  		    // 3. Compute a ranking score for each room with defensive checks
-  		    const scoredRooms = rooms.map(room => {
-  		      // Defensive checks: provide a default value (or skip the room) if properties are missing.
-  		      const roomTemp = (room.Temperature && room.Temperature.temperature !== undefined)
-  		        ? room.Temperature.temperature
-  		        : 0; // Or handle as desired
-
-  		      const roomHumidity = (room.Humidity && room.Humidity.humidity !== undefined)
-  		        ? room.Humidity.humidity
-  		        : 0;
-
-  		      const roomLight = (room.Light_Intensity && room.Light_Intensity.light_intensity !== undefined)
-  		        ? room.Light_Intensity.light_intensity
-  		        : 0;
-
-  		      const roomAQ = (room.Air_Quality && room.Air_Quality.PM10 !== undefined)
-  		        ? room.Air_Quality.PM10
-  		        : 0;
-
-  		      // Calculate absolute differences
-  		      const diffTemp = Math.abs(roomTemp - profile.temperature);
-  		      const diffHumidity = Math.abs(roomHumidity - profile.humidity);
-  		      const diffLight = Math.abs(roomLight - profile.light);
-  		      const diffAQ = Math.abs(roomAQ - profile.air_quality);
-
-  		      // Facility penalty: add penalty if facilities do not meet desired values
-  		      let facilityPenalty = 0;
-  		      const facilities = room.Room_facilities || {}; // default to empty object if missing
-  		      if (facilities.seating_capacity < profile.seating_capacity) {
-  		        facilityPenalty += (profile.seating_capacity - facilities.seating_capacity) * 10;
-  		      }
-  		      if (facilities.computers < profile.computers) {
-  		        facilityPenalty += (profile.computers - facilities.computers) * 10;
-  		      }
-  		      if (facilities.robots_for_training < profile.robots_for_training) {
-  		        facilityPenalty += (profile.robots_for_training - facilities.robots_for_training) * 10;
-  		      }
-  		      if (profile.videoprojector && !facilities.videoprojector) {
-  		        facilityPenalty += 50;
-  		      }
-
-  		      // Combine the differences with the user-defined weights
-  		      const score =
-  		        preferences.temperature * diffTemp +
-  		        preferences.humidity * diffHumidity +
-  		        preferences.light * diffLight +
-  		        preferences.air_quality * diffAQ +
-  		        facilityPenalty;
-
-  		      return { ...room, score, name: room.name };
-  		    });
-
-  		    // 4. Sort the rooms by score (lower score indicates a closer match)
-  		    scoredRooms.sort((a, b) => a.score - b.score);
-
-  		    // 5. Display the ranked rooms in the UI
-  		    let list = document.getElementById("room-list");
-  		    list.innerHTML = "";
-  		    if (scoredRooms.length === 0) {
-  		      list.innerHTML = "<li class='alert'>No rooms match your preferences.</li>";
-  		      return;
-  		    }
-
-  		    scoredRooms.forEach((room, index) => {
-  		      const fac = room.Room_facilities || {};
-  		      const facilitiesText = [];
-  		      if (fac.videoprojector) facilitiesText.push("Videoprojector");
-  		      facilitiesText.push(`Seats: ${fac.seating_capacity || "N/A"}`);
-  		      if (fac.computers) facilitiesText.push(`Computers: ${fac.computers}`);
-  		      if (fac.robots_for_training) facilitiesText.push(`Robots: ${fac.robots_for_training}`);
-
-  		      list.innerHTML += `
-  		        <li class='p-2 border bg-white rounded mb-2'>
-  		          <span class='font-bold'>Rank ${index + 1}:</span> ${room.name}
-  		          <span class='text-gray-600'>
-  		            | Temp: ${room.Temperature ? room.Temperature.temperature : "N/A"}°C 
-  		            | Humidity: ${room.Humidity ? room.Humidity.humidity : "N/A"}% 
-  		            | Light: ${room.Light_Intensity ? room.Light_Intensity.light_intensity : "N/A"} lux 
-  		            | Air Quality (PM10): ${room.Air_Quality ? room.Air_Quality.PM10 : "N/A"}
-  		          </span>
-  		          <br><span class='text-gray-700'>Facilities: ${facilitiesText.join(", ")}</span>
-  		          <br><span class='text-gray-500'>Score: ${room.score.toFixed(2)}</span>
-  		        </li>`;
-  		    });
-  		  } catch (error) {
-  		    console.error("Error fetching or ranking rooms:", error);
-  		    alert("Server error. Please try again later.");
-  		  }
-  		}
-		async function fetchAndRankRooms() {
-		    const API_URL = "http://localhost:8087";
-		
-		    // Fetch list of room names
-		    let roomNames = await fetch(`${API_URL}/RoomList/Names`).then(res => res.json());
-		    let roomsData = [];
-		
-		    // Fetch latest data for each room
-		    for (let room of roomNames) {
-		        let roomData = await fetch(`${API_URL}/Rooms/Last/${room}`).then(res => res.json());
-		        roomsData.push(roomData);
-		    }
-		
-		    // Get user preferences
-		    let weights = {
-		        temperature: parseInt(document.getElementById("temp_importance").value),
-		        humidity: parseInt(document.getElementById("humidity_importance").value),
-		        light: parseInt(document.getElementById("light_importance").value),
-		        air_quality: parseInt(document.getElementById("aqi_importance").value)
-		    };
-		
-		    // Normalize criteria values
-		    let minMax = {};
-		    ["temperature", "humidity", "light", "air_quality"].forEach(key => {
-		        minMax[key] = {
-		            min: Math.min(...roomsData.map(r => extractValue(r, key))),
-		            max: Math.max(...roomsData.map(r => extractValue(r, key)))
-		        };
-		    });
-		
-		    roomsData.forEach(room => {
-		        room.normalized = {
-		            temperature: normalize(room, "temperature", minMax),
-		            humidity: normalize(room, "humidity", minMax),
-		            light: normalize(room, "light", minMax),
-		            air_quality: normalize(room, "air_quality", minMax)
-		        };
-		    });
-		
-		    // Compute AHP scores
-		    roomsData.forEach(room => {
-		        room.ahpScore = Object.keys(weights).reduce((sum, key) => sum + (room.normalized[key] * weights[key]), 0);
-		    });
-		
-		    // Sort rooms by score
-		    roomsData.sort((a, b) => b.ahpScore - a.ahpScore);
-		
-		    // Display results
-		    let list = document.getElementById("room-list");
-		    list.innerHTML = "";
-		    roomsData.forEach((room, index) => {
-		        list.innerHTML += `<li class='p-2 border bg-white rounded mb-2'>
-		            <span class='font-bold'>Rank ${index + 1}:</span> ${room.name}
-		            <span class='text-gray-600'>| Temp: ${room.Temperature.temperature}°C | Humidity: ${room.Humidity.humidity}% | Light: ${room.Light_Intensity.light_intensity} lux | AQI: ${room.Air_Quality.PM10}</span>
-		        </li>`;
-		    });
-		}
-		
+        			
 		function extractValue(room, key) {
-		    const mapping = {
-		        temperature: room.Temperature.temperature,
-		        humidity: room.Humidity.humidity,
-		        light: room.Light_Intensity.light_intensity,
-		        air_quality: room.Air_Quality.PM10
-		    };
-		    return mapping[key];
+		  switch (key) {
+		    case "temperature":
+		      return room.Temperature ? room.Temperature.temperature : 0;
+		    case "humidity":
+		      return room.Humidity ? room.Humidity.humidity : 0;
+		    case "light":
+		      return room.Light_Intensity ? room.Light_Intensity.light_intensity : 0;
+		    case "air_quality":
+		      // For normalization purposes we use PM10 (the threshold for PM10 is 50 µg/m³)
+		      return room.Air_Quality ? room.Air_Quality.PM10 : 0;
+		    default:
+		      return 0;
+		  }
 		}
-
+		
+		// Helper: Normalize a room's criterion value using the min and max values.
 		function normalize(room, key, minMax) {
-		    let value = extractValue(room, key);
-		    return (value - minMax[key].min) / (minMax[key].max - minMax[key].min);
+		  let value = extractValue(room, key);
+		  let min = minMax[key].min;
+		  let max = minMax[key].max;
+		  if (max - min === 0) return 0; // Avoid division by zero.
+		  return (value - min) / (max - min);
 		}
-
-		async function fetchRoomList() {
-  			let para = document.getElementById('test');
-			para.innerHTML = "test"
-  			const response = await fetch('http://localhost:8087/RoomList', {
-    			headers: new Headers({
-      				'Transfer-Encoding': 'chunked',
-					'Content-Security-Policy': 'default-src self "self"; script-src self "unsafe-inline"; style-src self "unsafe-inline";',
-      				'Access-Control-Allow-Origin': '*',
-      				'Access-Control-Allow-Methods': 'GET'
-    			})
-  			});
-
-
-			const roomData = await response.json();
-  			
-  			// Assuming `response.json()` returns an array of room objects
-			console.log(response.json())
-  			para.innerHTML = JSON.stringify(roomData, null, 2);
+		
+		// Helper: Compute AHP criteria weights using the geometric mean method.
+		// The user inputs (weights) are used to build a pairwise comparison matrix.
+		function computeAHPWeights(userWeights) {
+		  let criteria = Object.keys(userWeights);
+		  let n = criteria.length;
+		  let matrix = [];
+		  
+		  // Build pairwise comparison matrix
+		  for (let i = 0; i < n; i++) {
+		    matrix[i] = [];
+		    for (let j = 0; j < n; j++) {
+		      matrix[i][j] = userWeights[criteria[i]] / userWeights[criteria[j]];
+		    }
+		  }
+		  
+		  // Compute the geometric mean for each row.
+		  let geoMeans = [];
+		  for (let i = 0; i < n; i++) {
+		    let product = 1;
+		    for (let j = 0; j < n; j++) {
+		      product *= matrix[i][j];
+		    }
+		    geoMeans[i] = Math.pow(product, 1/n);
+		  }
+		  
+		  // Normalize the geometric means to sum to 1.
+		  let sumGeo = geoMeans.reduce((sum, val) => sum + val, 0);
+		  let normalizedWeights = {};
+		  for (let i = 0; i < n; i++) {
+		    normalizedWeights[criteria[i]] = geoMeans[i] / sumGeo;
+		  }
+		  
+		  return normalizedWeights;
 		}
-    </script>
+		
+		// Helper: Check if a room meets all the threshold criteria.
+		function meetsThreshold(room) {
+		  const pm25 = room.Air_Quality ? room.Air_Quality["PM2.5"] : undefined;
+		  const pm10 = room.Air_Quality ? room.Air_Quality.PM10 : undefined;
+		  const co2 = room.CO2 ? room.CO2.co2_level : undefined;
+		  const humidity = room.Humidity ? room.Humidity.humidity : undefined;
+		  const light = room.Light_Intensity ? room.Light_Intensity.light_intensity : undefined;
+		  const sound = room.Sound ? room.Sound.sound_level : undefined;
+		  const temperature = room.Temperature ? room.Temperature.temperature : undefined;
+		  const voc = room.VOC ? room.VOC.VOC_level : undefined;
+		  
+		  return (pm25 !== undefined && pm25 <= 25) &&
+		         (pm10 !== undefined && pm10 <= 50) &&
+		         (co2 !== undefined && co2 <= 1000) &&
+		         (humidity !== undefined && humidity >= 40 && humidity <= 60) &&
+		         (light !== undefined && light <= 500) &&
+		         (sound !== undefined && sound <= 70) &&
+		         (temperature !== undefined && temperature >= 15 && temperature <= 28) &&
+		         (voc !== undefined && voc <= 1000);
+		}
+		
+		// Main function using AHP to rank rooms.
+		async function fetchAndRankRooms() {
+		  const API_URL = "http://localhost:8087";
+
+		  const rankButton = document.getElementById("rank-button");
+		  rankButton.disabled = true;
+		  rankButton.classList.add('opacity-50', 'cursor-not-allowed');
+		  
+		  // ***** 1. Validate User Inputs on the Desired Room Profile *****
+		  // (Assuming you have these input fields in your HTML.)
+		  try {
+		  	let desiredTemp = parseFloat(document.getElementById("desired_temp").value);
+		  	let desiredHumidity = parseFloat(document.getElementById("desired_humidity").value);
+		  	let desiredLight = parseFloat(document.getElementById("desired_light").value);
+		  	let desiredAQI = parseFloat(document.getElementById("desired_aqi").value); // for PM10
+		  	
+		  	if (desiredTemp < 15 || desiredTemp > 28) {
+		  	  alert("Desired temperature must be between 15°C and 28°C.");
+		  	  return;
+		  	}
+		  	if (desiredHumidity < 40 || desiredHumidity > 60) {
+		  	  alert("Desired humidity must be between 40% and 60%.");
+		  	  return;
+		  	}
+		  	if (desiredLight > 500) {
+		  	  alert("Desired light intensity must be not more than 500 lux.");
+		  	  return;
+		  	}
+		  	if (desiredAQI > 50) { // PM10 threshold
+		  	  alert("Desired Air Quality (PM10) must be 50 µg/m³ or less.");
+		  	  return;
+		  	}
+		  	
+		  	// ***** 2. Validate the User's Importance Weights *****
+		  	let weightTemp = parseInt(document.getElementById("temp_importance").value);
+		  	let weightHumidity = parseInt(document.getElementById("humidity_importance").value);
+		  	let weightLight = parseInt(document.getElementById("light_importance").value);
+		  	let weightAQI = parseInt(document.getElementById("aqi_importance").value);
+		  	
+		  	if (
+		  	  weightTemp < 1 || weightTemp > 9 ||
+		  	  weightHumidity < 1 || weightHumidity > 9 ||
+		  	  weightLight < 1 || weightLight > 9 ||
+		  	  weightAQI < 1 || weightAQI > 9
+		  	) {
+		  	  alert("Importance values must be between 1 and 9.");
+		  	  return;
+		  	}
+		  	
+		  	// ***** 3. Fetch List of Room Names *****
+		  	let roomNames = await fetch(`${API_URL}/RoomList/Names`).then(res => res.json());
+		  	let roomsData = [];
+		  	
+		  	// ***** 4. Fetch the Latest Data for Each Room *****
+		  	for (let room of roomNames) {
+		  	  let roomData = await fetch(`${API_URL}/Rooms/Last/${room}`).then(res => res.json());
+		  	  roomsData.push(roomData);
+		  	}
+		  	
+		  	// ***** 5. Filter Out Rooms That Do Not Meet the Threshold Requirements *****
+		  	let filteredRooms = roomsData.filter(meetsThreshold);
+		  	
+		  	// If no room meets thresholds, notify the user.
+		  	if (filteredRooms.length === 0) {
+		  	  let list = document.getElementById("room-list");
+		  	  list.innerHTML = "<li class='p-2 border bg-white rounded mb-2 text-red-600'>No recommended rooms available based on the threshold criteria.</li>";
+		  	  return;
+		  	}
+		  	
+		  	// ***** 6. Prepare User Weights for AHP Calculation *****
+		  	let userWeights = {
+		  	  temperature: weightTemp,
+		  	  humidity: weightHumidity,
+		  	  light: weightLight,
+		  	  air_quality: weightAQI
+		  	};
+		  	
+		  	// Compute the AHP criteria weights using the geometric mean method.
+		  	let criteriaWeights = computeAHPWeights(userWeights);
+		  	console.log("AHP Criteria Weights:", criteriaWeights);
+		  	
+		  	// ***** 7. Determine Min/Max Values for Normalization (using filtered rooms) *****
+		  	let minMax = {};
+		  	["temperature", "humidity", "light", "air_quality"].forEach(key => {
+		  	  minMax[key] = {
+		  	    min: Math.min(...filteredRooms.map(r => extractValue(r, key))),
+		  	    max: Math.max(...filteredRooms.map(r => extractValue(r, key)))
+		  	  };
+		  	});
+		  	
+		  	// ***** 8. Normalize Each Room's Performance Values *****
+		  	filteredRooms.forEach(room => {
+		  	  room.normalized = {
+		  	    temperature: normalize(room, "temperature", minMax),
+		  	    humidity: normalize(room, "humidity", minMax),
+		  	    light: normalize(room, "light", minMax),
+		  	    air_quality: normalize(room, "air_quality", minMax)
+		  	  };
+		  	});
+		  	
+		  	// ***** 9. Compute the AHP Score for Each Room *****
+		  	filteredRooms.forEach(room => {
+		  	  room.ahpScore = 
+		  	    room.normalized.temperature * criteriaWeights.temperature +
+		  	    room.normalized.humidity * criteriaWeights.humidity +
+		  	    room.normalized.light * criteriaWeights.light +
+		  	    room.normalized.air_quality * criteriaWeights.air_quality;
+		  	});
+		  	
+		  	// ***** 10. Sort the Rooms by AHP Score (Higher is Better) *****
+		  	filteredRooms.sort((a, b) => b.ahpScore - a.ahpScore);
+		  	
+		  	// ***** 11. Display Results *****
+		  	let list = document.getElementById("room-list");
+		  	list.innerHTML = "";
+		  	filteredRooms.forEach((room, index) => {
+		  	  list.innerHTML += `<li class='p-2 border bg-white rounded mb-2'>
+		  	    <span class='font-bold'>Rank ${index + 1}:</span> ${room.name}
+		  	    <span class='text-gray-600'>
+		  	      | Temp: ${room.Temperature ? room.Temperature.temperature : "N/A"}°C 
+		  	      | Humidity: ${room.Humidity ? room.Humidity.humidity : "N/A"}% 
+		  	      | Light: ${room.Light_Intensity ? room.Light_Intensity.light_intensity : "N/A"} lux 
+		  	      | AQ (PM10): ${room.Air_Quality ? room.Air_Quality.PM10 : "N/A"}
+		  	    </span>
+		  	    <br><span class='text-gray-500'>AHP Score: ${room.ahpScore.toFixed(2)}</span>
+		  	  </li>`;
+		  	});
+		  } catch(error) {
+			  console.error("Error processing room rankings:", error);
+	          alert("An error occurred while processing the room rankings.");
+		  } finally {
+			rankButton.disabled = false;
+	        rankButton.classList.remove('opacity-50', 'cursor-not-allowed');
+		  }
+		}
+	</script>
 </body>
 </html>

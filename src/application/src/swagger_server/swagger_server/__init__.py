@@ -9,4 +9,3 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/Temp_DB"  # Change this to 
 
 # Initialize the PyMongo object after setting the config
 mongo = PyMongo(app)
-
