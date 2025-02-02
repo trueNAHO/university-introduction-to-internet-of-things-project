@@ -1,1 +1,5 @@
 = Output
+
+For simplicity and due to technical issues, access to the results of the
+decision support system is not provided as a separate REST API. Instead, it is
+implemented on the client side in the <<User, User UI>>.

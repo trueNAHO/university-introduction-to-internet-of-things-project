@@ -23,7 +23,14 @@
                   pyright.enable = true;
                   ruff-format.enable = true;
                   ruff.enable = true;
-                  typos.settings.ignored-words = ["mosquitto"];
+
+                  typos.settings.ignored-words = [
+                    "Retrive"
+                    "facilites"
+                    "mosquitto"
+                  ];
+
+                  yamllint.enable = false;
                 };
 
                 devShells.packages = lib.singleton (

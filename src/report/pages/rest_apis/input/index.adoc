@@ -1,1 +1,19 @@
 = Input
+
+The following Swagger extract generates the REST API for the GET, DELETE and PUT
+requests on the `/Rooms/\{room_name}` endpoints:
+
+----
+include::{root}/partials/application/swagger.yaml[indent=0, lines=48..123]
+----
+
+The following Swagger extract generates the REST API for the GET and POST
+requests on the `/Air_Quality/\{room_name}` endpoints:
+
+----
+include::{root}/partials/application/swagger.yaml[indent=0, lines=124..174]
+----
+
+Since every database entry has an associated `timestamp` value, getting the
+calendar events during a specific time window can be trivially achieved on the
+client side by comparing against the time window when fetching.

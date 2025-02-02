@@ -1,5 +1,7 @@
 = REST APIs
 
+The REST APIs are generated using Swagger.
+
 include::./input/index.adoc[leveloffset=+1]
 
 include::./output/index.adoc[leveloffset=+1]
