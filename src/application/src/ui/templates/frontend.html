@@ -101,25 +101,25 @@
                 videoprojector: document.getElementById("require_videoprojector").checked
             };
 
-            if (profile.temperature > 10 && profile.temperature < 35) {
+            if (profile.temperature < 10 || profile.temperature > 35) {
                 alert("Error: Temperature should be between 10-35°C!");
                 return;
             }
-            if (profile.humidity < 60 && profile.humidity > 40) {
+            if (profile.humidity > 60 || profile.humidity < 40) {
                 alert("Error: Humidity should be between 40-60%");
                 return;
             }
-            if (profile.light > 100 && profile.light < 500) {
+            if (profile.light < 100 || profile.light > 500) {
                 alert("Error: Light should be between 100-1000 lux!");
                 return;
             }
-            if (profile.air_quality > 0 && profile.air_quality < 500) {
+            if (profile.air_quality < 0 || profile.air_quality > 500) {
                 alert("Error: AQI should be between 0-500!");
                 return;
             }
 
-			fetch('${API_URL}/Air_Quality/Room_1', {
-                method: "POST",
+			fetch('http://localhost:8087/Air_Quality/Room_1', {
+                method: "GET",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ preferences, profile })
             })
