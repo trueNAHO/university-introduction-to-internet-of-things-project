@@ -1,10 +1,79 @@
 [appendix]
 = Contributions
 
-include::./gabriel_ny_aintsoa_leclerc/index.adoc[leveloffset=+1]
+.Research
+[center, cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
 
-include::./karyna_ouahrani/index.adoc[leveloffset=+1]
+| <<Protocols>>              | X | X | X | X
+| <<Criteria>>               |   |   | X |
+|===
 
-include::./noah_pierre_biewesch/index.adoc[leveloffset=+1]
+.Hardware
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
 
-include::./steve_meireles_lopes/index.adoc[leveloffset=+1]
+| Arduino                    | X | X |   |
+|===
+
+.Backend
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
+
+| <<_database, DB (Docker)>> | X | X | X | X
+| <<Algorithm>>              |   |   |   | X
+| <<_rest_apis>>             | X |   |   |
+| MQTT                       | X |   |   |
+|===
+
+.Frontend
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
+
+| <<UIs>>                    |   | X |   | X
+|===
+
+.Documentation
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
+
+| Report                     |   |   | X |
+| Slides                     |   |   | X |
+|===
+
+.Miscellaneous
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task
+| Gabriel Ny aintsoa Leclerc
+| Karyna Ouahrani
+| Noah Pierre Biewesch
+| Steve Meireles Lopes
+
+| General Support            |   |   | X | X
+|===
