@@ -7,11 +7,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<button onclick="fetchRoomList()" >Load Room List</button>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
-	<p id="test">Here comes the output<p>
 
     <title>Room Selection System</title>
 
@@ -103,19 +101,19 @@
                 videoprojector: document.getElementById("require_videoprojector").checked
             };
 
-            if (profile.temperature < 10 || profile.temperature > 35) {
+            if (profile.temperature > 10 && profile.temperature < 35) {
                 alert("Error: Temperature should be between 10-35°C!");
                 return;
             }
-            if (profile.humidity < 20 || profile.humidity > 90) {
-                alert("Error: Humidity should be between 20-90%!");
+            if (profile.humidity < 60 && profile.humidity > 40) {
+                alert("Error: Humidity should be between 40-60%");
                 return;
             }
-            if (profile.light < 100 || profile.light > 1000) {
+            if (profile.light > 100 && profile.light < 500) {
                 alert("Error: Light should be between 100-1000 lux!");
                 return;
             }
-            if (profile.air_quality < 0 || profile.air_quality > 500) {
+            if (profile.air_quality > 0 && profile.air_quality < 500) {
                 alert("Error: AQI should be between 0-500!");
                 return;
             }
