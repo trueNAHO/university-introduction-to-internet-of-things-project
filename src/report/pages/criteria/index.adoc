@@ -1,1 +1,62 @@
 = Criteria
+
+To ensure the most accurate results, the room selection system considers all
+data measurable by our Arduino sensors:
+
+Air Quality (PM~2.5~)::
+
+Concentration of fine particles in the air. Low values indicate healthy air
+quality, while high values can lead to respiratory problems and increased health
+risks.
+
+Air Quality (PM~10~)::
+
+Concentration of large particles in the air. Low values help maintain healthy
+indoor air, while high values can lead to respiratory problems and discomfort.
+
+CO~2~::
+
+Concentration of CO~2~ in the air. Low values indicate healthy environments,
+while high values can cause discomfort, fatigue, and impaired concentration.
+
+Humidity::
+
+Level of moisture in the air. Low values may lead to dryness and irritation,
+while high values may encourage mold growth and worsen respiratory conditions.
+
+Light Intensity::
+
+Level of visible light in the environment. Low values make it hard to see, while
+high values may cause eye strain and discomfort.
+
+Sound Levels::
+
+Intensity of noise in the environment. Low values indicate a quiet and
+distraction-free environment, while high values indicate potentially distracting
+background noise.
+
+Temperature::
+
+Ambient temperature of the room. Low values indicates coldness, while high
+values indicate warmth.
+
+Volatile Organic Compounds (VOC)::
+
+Concentration of VOCs in the air. Low values indicate good air quality, while
+high values indicate potential exposure to harmful chemicals.
+
+The room selection system uses the following thresholds by default:
+
+[.center%autowidth, cols=",^,>", frame=none, grid=rows]
+|===
+| Criterion                                                 | Unit    | Threshold
+
+| Air Quality (PM~2.5~) cite:[commission:eaqs]              | µg/m^3^ | 25
+| Air Quality (PM~10~) cite:[commission:eaqs]               | µg/m^3^ | 50
+| CO~2~ cite:[hahn:iaq]                                     | ppm     | 1000
+| Humidity cite:[arundel:iheofrhiie]                        | %       | 40--60
+| Light Intensity cite:[toolbox:irll]                       | lux     | 500
+| Sound Levels cite:[agency:einlafaw]                       | dB      | 70
+| Temperature cite:[brelih:taacriesanr]                     | °C      | 15--28
+| Volatile Organic Compounds (VOC) cite:[oppl:esieatulvicd] | µg/m^3^ | 1000
+|===

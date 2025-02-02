@@ -12,31 +12,37 @@
       system: let
         lib = inputs.asciidoctor-nix.mkLib pkgs.lib;
 
-        mkOutputs = name:
-          inputs.asciidoctor-nix.mkOutputs {
-            checks.hooks = {
-              autoflake.enable = true;
-              isort.enable = true;
-              mypy.enable = true;
-              pyright.enable = true;
-              ruff-format.enable = true;
-              ruff.enable = true;
-              typos.settings.ignored-words = ["mosquitto"];
-            };
+        mkOutputs = name: args:
+          inputs.asciidoctor-nix.mkOutputs (
+            lib.asciidoctor.mergeAttrsMkMerge [
+              {
+                checks.hooks = {
+                  autoflake.enable = true;
+                  isort.enable = true;
+                  mypy.enable = true;
+                  pyright.enable = true;
+                  ruff-format.enable = true;
+                  ruff.enable = true;
+                  typos.settings.ignored-words = ["mosquitto"];
+                };
 
-            devShells.packages = lib.singleton (
-              pkgs.python3.withPackages (_: [])
-            );
+                devShells.packages = lib.singleton (
+                  pkgs.python3.withPackages (_: [])
+                );
 
-            packages = {
-              inherit (inputs.self) lastModified;
-              inherit name;
+                packages = {
+                  inherit (inputs.self) lastModified;
+                  inherit name;
 
-              commandOptions.doctype = "book";
-              inputFile = "pages/index.adoc";
-              src = ./src + "/${name}";
-            };
-          };
+                  commandOptions.doctype = "book";
+                  inputFile = "pages/index.adoc";
+                  src = ./src + "/${name}";
+                };
+              }
+
+              args
+            ]
+          );
 
         pkgs = inputs.nixpkgs.legacyPackages.${system};
       in
@@ -115,8 +121,16 @@
             )
           )
 
-          (mkOutputs "presentation")
-          (mkOutputs "report")
+          (mkOutputs "presentation" {})
+
+          (
+            mkOutputs "report" {
+              packages.commandOptions.attribute = [
+                "bibtex-file=attachments/bibtex.bib"
+                "bibtex-order=alphabetical"
+              ];
+            }
+          )
         ]
     );
 }
