@@ -1,0 +1,9 @@
+= Implementation
+
+For testing purposes, a simple MongoDB Docker image is implemented in <<Nix>>.
+However, the final product leverages <<_docker_compose>> without depending on
+the <<Nix>> Docker image.
+
+include::./nix/index.adoc[leveloffset=+1]
+
+include::./docker_compose/index.adoc[leveloffset=+1]

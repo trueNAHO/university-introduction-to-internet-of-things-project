@@ -1,0 +1,19 @@
+= Docker Compose
+
+The following Docker Compose extract defines the `mongodb` container,
+initializing the database to `TEMP_DB`, exposing the MongoDB service's 27017
+port, and binding the `mongo_data`, `assets`, and `src/import-data.sh` host
+paths into the container:
+
+----
+include::{root}/partials/application/docker-compose.yml[lines=2..16]
+----
+
+On startup, the container runs all scripts inside
+`/docker-entrypoint-initdb.d/`, including the previously mounted
+`import-data.sh` script which initializes the database with the
+`/data/Project_sensor_data` values:
+
+----
+include::{root}/partials/application/import-data.sh[]
+----

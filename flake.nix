@@ -21,6 +21,7 @@
               pyright.enable = true;
               ruff-format.enable = true;
               ruff.enable = true;
+              typos.settings.ignored-words = ["mosquitto"];
             };
 
             devShells.packages = lib.singleton (

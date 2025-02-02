@@ -1,0 +1,20 @@
+= Design Decisions
+
+In relational databases like SQL, integrating the following two JSON entries
+requires separate tables and significant schema modifications due to their
+different structures:
+
+* {empty}
++
+----
+include::{root}/partials/application/assets/air_quality_sensor_data.json[]
+----
+
+* {empty}
++
+----
+include::{root}/partials/application/assets/room_facilities_data.json[]
+----
+
+Since IoT applications benefit from seamless integration of heterogeneous data
+in a single collection, the highly optimized MongoDB seems appropriate.

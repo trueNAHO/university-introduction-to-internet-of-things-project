@@ -1,0 +1,22 @@
+= Nix
+
+The following Nix expression declares a simple MongoDB Docker image:
+
+----
+include::{root}/partials/application/application-mongo-local.nix[]
+----
+
+To build and load the Docker tar archive into the Docker service, run:
+
+----
+nix build .#application-mongo-local
+docker load <result
+----
+
+To launch the Docker image while exposing the MongoDB service's 27017 port,
+binding the container's `/data/db` directory to `$MONGO_DB` on the host, and
+naming the container `mongodb`, run:
+
+----
+docker run --name mongodb -p 27017:27017 -v "$MONGO_DB:/data/db" mongo
+----
