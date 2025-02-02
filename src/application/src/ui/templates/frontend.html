@@ -7,10 +7,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Room Selection System</title>
+	<button onclick="fetchRoomList()" >Load Room List</button>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
+	<p id="test">Here comes the output<p>
+
+    <title>Room Selection System</title>
+
     <div id="intro-page" class="text-center w-full max-w-6xl bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-5xl font-bold mb-6">Room Selection Decision Support System</h1>
         <div class="flex border-b mb-4">
@@ -25,7 +29,7 @@
             <iframe src="/swagger" class="w-full h-96 border rounded"></iframe>
         </div>
     </div>
-    
+
 
     <div id="selection-page" class="hidden w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold mb-4">Room Selection System</h1>
@@ -63,6 +67,8 @@
 
 
     <script>
+		const API_URL = "http://localhost:8087";
+
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
@@ -114,7 +120,7 @@
                 return;
             }
 
-            fetch('/api/room_ranking', {
+			fetch('${API_URL}/Air_Quality/Room_1', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ preferences, profile })
@@ -149,6 +155,26 @@
                 alert("Server error. Please try again later.");
             });
         }
+
+		async function fetchRoomList() {
+  			let para = document.getElementById('test');
+			para.innerHTML = "test"
+  			const response = await fetch('http://localhost:8087/RoomList', {
+    			headers: new Headers({
+      				'Transfer-Encoding': 'chunked',
+					'Content-Security-Policy': 'default-src self "self"; script-src self "unsafe-inline"; style-src self "unsafe-inline";',
+      				'Access-Control-Allow-Origin': '*',
+      				'Access-Control-Allow-Methods': 'GET'
+    			})
+  			});
+
+
+			const roomData = await response.json();
+  			
+  			// Assuming `response.json()` returns an array of room objects
+			console.log(response.json())
+  			para.innerHTML = JSON.stringify(roomData, null, 2);
+		}
     </script>
 </body>
 </html>
