@@ -1,11 +1,9 @@
 import re
 from datetime import datetime
 
-<<<<<<< HEAD:src/application/src/api/swagger_server/controllers/default_controller.py
 import connexion
 from flask import jsonify
 from swagger_server import mongo  # Import the PyMongo instance
-=======
 from swagger_server.models.air_quality_value import AirQualityValue  # noqa: E501
 from swagger_server.models.co2_value import CO2Value  # noqa: E501
 from swagger_server.models.humidity_value import HumidityValue  # noqa: E501
@@ -27,7 +25,6 @@ from swagger_server.models.sound_value import SoundValue  # noqa: E501
 from swagger_server.models.temperature_value import TemperatureValue  # noqa: E501
 from swagger_server.models.voc_value import VOCValue  # noqa: E501
 from swagger_server import util
->>>>>>> API_Database:src/application/src/swagger_server/controllers/default_controller.py
 
 
 def check_format(date_string):
@@ -509,7 +506,6 @@ def room_facilities_room_name_get(room_name):  # noqa: E501
     else:
         return jsonify({"error": "Room not found"}), 404
 
-<<<<<<< HEAD:src/application/src/api/swagger_server/controllers/default_controller.py
     return jsonify({"room_name": room_name, "facilities": facilities})
 
 
@@ -590,13 +586,6 @@ def room_facilities_room_name_post(body, room_name):  # noqa: E501
 
     # Return a success response
     return jsonify({"message": "Facilities successfully added to the room"}), 201
-
-=======
-    return jsonify({
-        "room_name": room_name,
-        "facilities": facilities
-    })
->>>>>>> API_Database:src/application/src/swagger_server/controllers/default_controller.py
 
 def room_facilities_room_name_put(body, room_name):
     if not connexion.request.is_json:

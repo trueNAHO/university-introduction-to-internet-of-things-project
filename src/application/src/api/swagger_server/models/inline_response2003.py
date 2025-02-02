@@ -7,12 +7,9 @@ from typing import Dict, List  # noqa: F401
 
 from swagger_server import util
 from swagger_server.models.base_model_ import Model
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2003.py
 from swagger_server.models.co2_value import CO2Value  # noqa: F401,E501
-=======
 from swagger_server.models.air_quality_value import AirQualityValue  # noqa: F401,E501
 from swagger_server import util
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2003.py
 
 
 class InlineResponse2003(Model):
@@ -20,12 +17,8 @@ class InlineResponse2003(Model):
 
     Do not edit the class manually.
     """
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2003.py
 
-    def __init__(self, room_name: str = None, co2_data: List[CO2Value] = None):  # noqa: E501
-=======
     def __init__(self, room_name: str=None, air_quality_data: List[AirQualityValue]=None):  # noqa: E501
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2003.py
         """InlineResponse2003 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2003.  # noqa: E501
@@ -33,11 +26,7 @@ class InlineResponse2003(Model):
         :param air_quality_data: The air_quality_data of this InlineResponse2003.  # noqa: E501
         :type air_quality_data: List[AirQualityValue]
         """
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2003.py
-        self.swagger_types = {"room_name": str, "co2_data": List[CO2Value]}
 
-        self.attribute_map = {"room_name": "room_name", "co2_data": "co2_data"}
-=======
         self.swagger_types = {
             'room_name': str,
             'air_quality_data': List[AirQualityValue]
@@ -47,7 +36,6 @@ class InlineResponse2003(Model):
             'room_name': 'room_name',
             'air_quality_data': 'air_quality_data'
         }
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2003.py
         self._room_name = room_name
         self._air_quality_data = air_quality_data
 

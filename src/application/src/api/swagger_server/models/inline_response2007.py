@@ -7,12 +7,8 @@ from typing import Dict, List  # noqa: F401
 
 from swagger_server import util
 from swagger_server.models.base_model_ import Model
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2007.py
-from swagger_server.models.temperature_value import TemperatureValue  # noqa: F401,E501
-=======
 from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
 from swagger_server import util
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2007.py
 
 
 class InlineResponse2007(Model):
@@ -20,14 +16,7 @@ class InlineResponse2007(Model):
 
     Do not edit the class manually.
     """
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2007.py
-
-    def __init__(
-        self, room_name: str = None, temperature_data: List[TemperatureValue] = None
-    ):  # noqa: E501
-=======
     def __init__(self, room_name: str=None, sound_data: List[SoundValue]=None):  # noqa: E501
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2007.py
         """InlineResponse2007 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2007.  # noqa: E501
@@ -36,15 +25,6 @@ class InlineResponse2007(Model):
         :type sound_data: List[SoundValue]
         """
         self.swagger_types = {
-<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2007.py
-            "room_name": str,
-            "temperature_data": List[TemperatureValue],
-        }
-
-        self.attribute_map = {
-            "room_name": "room_name",
-            "temperature_data": "temperature_data",
-=======
             'room_name': str,
             'sound_data': List[SoundValue]
         }
@@ -52,7 +32,6 @@ class InlineResponse2007(Model):
         self.attribute_map = {
             'room_name': 'room_name',
             'sound_data': 'sound_data'
->>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2007.py
         }
         self._room_name = room_name
         self._sound_data = sound_data
