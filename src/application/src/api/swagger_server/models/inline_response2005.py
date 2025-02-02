@@ -7,7 +7,12 @@ from typing import Dict, List  # noqa: F401
 
 from swagger_server import util
 from swagger_server.models.base_model_ import Model
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2005.py
 from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: F401,E501
+=======
+from swagger_server.models.humidity_value import HumidityValue  # noqa: F401,E501
+from swagger_server import util
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2005.py
 
 
 class InlineResponse2005(Model):
@@ -15,20 +20,25 @@ class InlineResponse2005(Model):
 
     Do not edit the class manually.
     """
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2005.py
 
     def __init__(
         self,
         room_name: str = None,
         light_intensity_data: List[LightIntensityValue] = None,
     ):  # noqa: E501
+=======
+    def __init__(self, room_name: str=None, humidity_data: List[HumidityValue]=None):  # noqa: E501
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2005.py
         """InlineResponse2005 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2005.  # noqa: E501
         :type room_name: str
-        :param light_intensity_data: The light_intensity_data of this InlineResponse2005.  # noqa: E501
-        :type light_intensity_data: List[LightIntensityValue]
+        :param humidity_data: The humidity_data of this InlineResponse2005.  # noqa: E501
+        :type humidity_data: List[HumidityValue]
         """
         self.swagger_types = {
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2005.py
             "room_name": str,
             "light_intensity_data": List[LightIntensityValue],
         }
@@ -36,9 +46,18 @@ class InlineResponse2005(Model):
         self.attribute_map = {
             "room_name": "room_name",
             "light_intensity_data": "light_intensity_data",
+=======
+            'room_name': str,
+            'humidity_data': List[HumidityValue]
+        }
+
+        self.attribute_map = {
+            'room_name': 'room_name',
+            'humidity_data': 'humidity_data'
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2005.py
         }
         self._room_name = room_name
-        self._light_intensity_data = light_intensity_data
+        self._humidity_data = humidity_data
 
     @classmethod
     def from_dict(cls, dikt) -> "InlineResponse2005":
@@ -75,24 +94,24 @@ class InlineResponse2005(Model):
         self._room_name = room_name
 
     @property
-    def light_intensity_data(self) -> List[LightIntensityValue]:
-        """Gets the light_intensity_data of this InlineResponse2005.
+    def humidity_data(self) -> List[HumidityValue]:
+        """Gets the humidity_data of this InlineResponse2005.
 
-        List of light intensity values for the room  # noqa: E501
+        List of humidity level values for the room  # noqa: E501
 
-        :return: The light_intensity_data of this InlineResponse2005.
-        :rtype: List[LightIntensityValue]
+        :return: The humidity_data of this InlineResponse2005.
+        :rtype: List[HumidityValue]
         """
-        return self._light_intensity_data
+        return self._humidity_data
 
-    @light_intensity_data.setter
-    def light_intensity_data(self, light_intensity_data: List[LightIntensityValue]):
-        """Sets the light_intensity_data of this InlineResponse2005.
+    @humidity_data.setter
+    def humidity_data(self, humidity_data: List[HumidityValue]):
+        """Sets the humidity_data of this InlineResponse2005.
 
-        List of light intensity values for the room  # noqa: E501
+        List of humidity level values for the room  # noqa: E501
 
-        :param light_intensity_data: The light_intensity_data of this InlineResponse2005.
-        :type light_intensity_data: List[LightIntensityValue]
+        :param humidity_data: The humidity_data of this InlineResponse2005.
+        :type humidity_data: List[HumidityValue]
         """
 
-        self._light_intensity_data = light_intensity_data
+        self._humidity_data = humidity_data

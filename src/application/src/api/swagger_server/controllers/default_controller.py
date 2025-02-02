@@ -1,9 +1,33 @@
 import re
 from datetime import datetime
 
+<<<<<<< HEAD:src/application/src/api/swagger_server/controllers/default_controller.py
 import connexion
 from flask import jsonify
 from swagger_server import mongo  # Import the PyMongo instance
+=======
+from swagger_server.models.air_quality_value import AirQualityValue  # noqa: E501
+from swagger_server.models.co2_value import CO2Value  # noqa: E501
+from swagger_server.models.humidity_value import HumidityValue  # noqa: E501
+from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
+from swagger_server.models.inline_response2001 import InlineResponse2001  # noqa: E501
+from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
+from swagger_server.models.inline_response2002 import InlineResponse2002  # noqa: E501
+from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa: E501
+from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
+from swagger_server.models.inline_response2005 import InlineResponse2005  # noqa: E501
+from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
+from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
+from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
+from swagger_server.models.inline_response2009 import InlineResponse2009  # noqa: E501
+from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
+from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: E501
+from swagger_server.models.room_facilities import RoomFacilities  # noqa: E501
+from swagger_server.models.sound_value import SoundValue  # noqa: E501
+from swagger_server.models.temperature_value import TemperatureValue  # noqa: E501
+from swagger_server.models.voc_value import VOCValue  # noqa: E501
+from swagger_server import util
+>>>>>>> API_Database:src/application/src/swagger_server/controllers/default_controller.py
 
 
 def check_format(date_string):
@@ -485,6 +509,7 @@ def room_facilities_room_name_get(room_name):  # noqa: E501
     else:
         return jsonify({"error": "Room not found"}), 404
 
+<<<<<<< HEAD:src/application/src/api/swagger_server/controllers/default_controller.py
     return jsonify({"room_name": room_name, "facilities": facilities})
 
 
@@ -566,6 +591,12 @@ def room_facilities_room_name_post(body, room_name):  # noqa: E501
     # Return a success response
     return jsonify({"message": "Facilities successfully added to the room"}), 201
 
+=======
+    return jsonify({
+        "room_name": room_name,
+        "facilities": facilities
+    })
+>>>>>>> API_Database:src/application/src/swagger_server/controllers/default_controller.py
 
 def room_facilities_room_name_put(body, room_name):
     if not connexion.request.is_json:
@@ -761,6 +792,93 @@ def room_list_post(body):  # noqa: E501
     return jsonify(
         {"message": f"Room '{body}' successfully added to all collections."}
     ), 201
+
+from flask import jsonify
+
+def rooms_last_room_name_get(room_name):  # noqa: E501
+    """Retrieve the last sensor values of a room
+
+    Returns the most recent sensor values for a specific room.
+
+    :param room_name: Name of the room to retrieve data for
+    :type room_name: str
+
+    :rtype: InlineResponse2002
+    """
+    sensor_types = {
+        "Air_Quality": "air_quality",
+        "CO2": "co2",
+        "Humidity": "humidity",
+        "Light_Intensity": "light_intensity",
+        "Sound": "sound",
+        "Temperature": "temperature",
+        "VOC": "voc"
+    }
+
+    room_data = {"name": room_name}
+
+    # Loop through each sensor type to get the most recent reading
+    for sensor, collection in sensor_types.items():
+        # Fetch the sensor data for the room
+        sensor_document = mongo.db[collection].find_one({"rooms.name": room_name})
+
+        if sensor_document:
+            for room in sensor_document.get("rooms", []):
+                if room["name"] == room_name:
+                    # If values are available, get the last (most recent) value in the list
+                    sensor_values = room.get(f"{sensor.lower()}_values", [])
+                    if sensor_values:
+                        room_data[sensor] = sensor_values[-1]  # Last item is the most recent
+                    else:
+                        room_data[sensor] = None
+                    break
+        else:
+            room_data[sensor] = None
+
+    # Fetch room facilities, if available
+    facilities_document = mongo.db.room_facilities.find_one({"rooms.name": room_name})
+    if facilities_document:
+        for room in facilities_document.get("rooms", []):
+            if room["name"] == room_name:
+                room_data["Room_facilities"] = room.get("facilities", {})
+                break
+    else:
+        room_data["Room_facilities"] = None
+
+    # If no data was found for any sensor or facility, return a 404 error
+    if not any(value is not None for value in room_data.values()):
+        return jsonify({"error": "Room not found"}), 404
+
+    # Return the data for the specified room
+    return jsonify(room_data), 200
+
+
+
+
+def room_list_names_get():  # noqa: E501
+    """Retrieve a list of all room names
+
+    Returns a list of all existing room names from the sensor collections. # noqa: E501
+
+
+    :rtype: List[str]
+    """
+    # Query the room_facilities collection for all room names
+    facilities_document = mongo.db.room_facilities.find({}, {"rooms.name": 1})
+
+    room_names = set()  # Use a set to avoid duplicates
+
+    # Iterate through the documents in the room_facilities collection
+    for doc in facilities_document:
+        if "rooms" in doc:
+            for room in doc["rooms"]:
+                room_names.add(room["name"])  # Add room name to the set
+
+    # Convert the set to a sorted list for consistency
+    room_list = sorted(room_names)
+
+    return jsonify(room_list), 200
+
 
 
 def rooms_room_name_delete(room_name):  # noqa: E501

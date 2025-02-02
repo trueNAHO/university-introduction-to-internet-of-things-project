@@ -7,7 +7,12 @@ from typing import Dict, List  # noqa: F401
 
 from swagger_server import util
 from swagger_server.models.base_model_ import Model
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2006.py
 from swagger_server.models.sound_value import SoundValue  # noqa: F401,E501
+=======
+from swagger_server.models.light_intensity_value import LightIntensityValue  # noqa: F401,E501
+from swagger_server import util
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2006.py
 
 
 class InlineResponse2006(Model):
@@ -15,20 +20,36 @@ class InlineResponse2006(Model):
 
     Do not edit the class manually.
     """
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2006.py
 
     def __init__(self, room_name: str = None, sound_data: List[SoundValue] = None):  # noqa: E501
+=======
+    def __init__(self, room_name: str=None, light_intensity_data: List[LightIntensityValue]=None):  # noqa: E501
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2006.py
         """InlineResponse2006 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2006.  # noqa: E501
         :type room_name: str
-        :param sound_data: The sound_data of this InlineResponse2006.  # noqa: E501
-        :type sound_data: List[SoundValue]
+        :param light_intensity_data: The light_intensity_data of this InlineResponse2006.  # noqa: E501
+        :type light_intensity_data: List[LightIntensityValue]
         """
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2006.py
         self.swagger_types = {"room_name": str, "sound_data": List[SoundValue]}
 
         self.attribute_map = {"room_name": "room_name", "sound_data": "sound_data"}
+=======
+        self.swagger_types = {
+            'room_name': str,
+            'light_intensity_data': List[LightIntensityValue]
+        }
+
+        self.attribute_map = {
+            'room_name': 'room_name',
+            'light_intensity_data': 'light_intensity_data'
+        }
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2006.py
         self._room_name = room_name
-        self._sound_data = sound_data
+        self._light_intensity_data = light_intensity_data
 
     @classmethod
     def from_dict(cls, dikt) -> "InlineResponse2006":
@@ -65,24 +86,24 @@ class InlineResponse2006(Model):
         self._room_name = room_name
 
     @property
-    def sound_data(self) -> List[SoundValue]:
-        """Gets the sound_data of this InlineResponse2006.
+    def light_intensity_data(self) -> List[LightIntensityValue]:
+        """Gets the light_intensity_data of this InlineResponse2006.
 
-        List of sound level values for the room  # noqa: E501
+        List of light intensity values for the room  # noqa: E501
 
-        :return: The sound_data of this InlineResponse2006.
-        :rtype: List[SoundValue]
+        :return: The light_intensity_data of this InlineResponse2006.
+        :rtype: List[LightIntensityValue]
         """
-        return self._sound_data
+        return self._light_intensity_data
 
-    @sound_data.setter
-    def sound_data(self, sound_data: List[SoundValue]):
-        """Sets the sound_data of this InlineResponse2006.
+    @light_intensity_data.setter
+    def light_intensity_data(self, light_intensity_data: List[LightIntensityValue]):
+        """Sets the light_intensity_data of this InlineResponse2006.
 
-        List of sound level values for the room  # noqa: E501
+        List of light intensity values for the room  # noqa: E501
 
-        :param sound_data: The sound_data of this InlineResponse2006.
-        :type sound_data: List[SoundValue]
+        :param light_intensity_data: The light_intensity_data of this InlineResponse2006.
+        :type light_intensity_data: List[LightIntensityValue]
         """
 
-        self._sound_data = sound_data
+        self._light_intensity_data = light_intensity_data

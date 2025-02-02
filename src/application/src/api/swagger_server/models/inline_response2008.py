@@ -7,7 +7,12 @@ from typing import Dict, List  # noqa: F401
 
 from swagger_server import util
 from swagger_server.models.base_model_ import Model
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2008.py
 from swagger_server.models.voc_value import VOCValue  # noqa: F401,E501
+=======
+from swagger_server.models.temperature_value import TemperatureValue  # noqa: F401,E501
+from swagger_server import util
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2008.py
 
 
 class InlineResponse2008(Model):
@@ -15,20 +20,36 @@ class InlineResponse2008(Model):
 
     Do not edit the class manually.
     """
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2008.py
 
     def __init__(self, room_name: str = None, voc_data: List[VOCValue] = None):  # noqa: E501
+=======
+    def __init__(self, room_name: str=None, temperature_data: List[TemperatureValue]=None):  # noqa: E501
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2008.py
         """InlineResponse2008 - a model defined in Swagger
 
         :param room_name: The room_name of this InlineResponse2008.  # noqa: E501
         :type room_name: str
-        :param voc_data: The voc_data of this InlineResponse2008.  # noqa: E501
-        :type voc_data: List[VOCValue]
+        :param temperature_data: The temperature_data of this InlineResponse2008.  # noqa: E501
+        :type temperature_data: List[TemperatureValue]
         """
+<<<<<<< HEAD:src/application/src/api/swagger_server/models/inline_response2008.py
         self.swagger_types = {"room_name": str, "voc_data": List[VOCValue]}
 
         self.attribute_map = {"room_name": "room_name", "voc_data": "voc_data"}
+=======
+        self.swagger_types = {
+            'room_name': str,
+            'temperature_data': List[TemperatureValue]
+        }
+
+        self.attribute_map = {
+            'room_name': 'room_name',
+            'temperature_data': 'temperature_data'
+        }
+>>>>>>> API_Database:src/application/src/swagger_server/models/inline_response2008.py
         self._room_name = room_name
-        self._voc_data = voc_data
+        self._temperature_data = temperature_data
 
     @classmethod
     def from_dict(cls, dikt) -> "InlineResponse2008":
@@ -65,24 +86,24 @@ class InlineResponse2008(Model):
         self._room_name = room_name
 
     @property
-    def voc_data(self) -> List[VOCValue]:
-        """Gets the voc_data of this InlineResponse2008.
+    def temperature_data(self) -> List[TemperatureValue]:
+        """Gets the temperature_data of this InlineResponse2008.
 
-        List of VOC values for the room  # noqa: E501
+        List of temperature values for the room  # noqa: E501
 
-        :return: The voc_data of this InlineResponse2008.
-        :rtype: List[VOCValue]
+        :return: The temperature_data of this InlineResponse2008.
+        :rtype: List[TemperatureValue]
         """
-        return self._voc_data
+        return self._temperature_data
 
-    @voc_data.setter
-    def voc_data(self, voc_data: List[VOCValue]):
-        """Sets the voc_data of this InlineResponse2008.
+    @temperature_data.setter
+    def temperature_data(self, temperature_data: List[TemperatureValue]):
+        """Sets the temperature_data of this InlineResponse2008.
 
-        List of VOC values for the room  # noqa: E501
+        List of temperature values for the room  # noqa: E501
 
-        :param voc_data: The voc_data of this InlineResponse2008.
-        :type voc_data: List[VOCValue]
+        :param temperature_data: The temperature_data of this InlineResponse2008.
+        :type temperature_data: List[TemperatureValue]
         """
 
-        self._voc_data = voc_data
+        self._temperature_data = temperature_data

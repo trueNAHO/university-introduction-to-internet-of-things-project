@@ -13,5 +13,13 @@ WORKDIR /docker-entrypoint-initdb.d
 # Copy your Python script directly into the container
 COPY ./src/your_python_script.py /docker-entrypoint-initdb.d/.py
 
+<<<<<<< HEAD
 # Set the command to run the Python script directly upon container startup
 CMD ["python3", "/docker-entrypoint-initdb.d/.py"]
+=======
+EXPOSE 8080
+
+ENTRYPOINT ["python3"]
+
+CMD ["-m", "swagger_server"]
+>>>>>>> API_Database

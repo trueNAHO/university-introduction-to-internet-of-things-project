@@ -16,6 +16,7 @@ from swagger_server.models.inline_response200 import InlineResponse200
 from swagger_server.models.inline_response201 import InlineResponse201
 from swagger_server.models.inline_response201_room import InlineResponse201Room
 from swagger_server.models.inline_response2001 import InlineResponse2001
+from swagger_server.models.inline_response20010 import InlineResponse20010
 from swagger_server.models.inline_response2002 import InlineResponse2002
 from swagger_server.models.inline_response2003 import InlineResponse2003
 from swagger_server.models.inline_response2004 import InlineResponse2004
