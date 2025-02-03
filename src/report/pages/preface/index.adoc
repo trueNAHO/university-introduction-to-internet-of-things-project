@@ -3,3 +3,7 @@
 
 This report details the protocol, database, criteria, algorithm, REST API, and
 UI design choices of the room selection decision support system.
+
+This report and the application's source code are available at
+github:trueNAHO/university-introduction-to-internet-of-things-project
+cite:[leclerc:uitip] under the MIT license.
