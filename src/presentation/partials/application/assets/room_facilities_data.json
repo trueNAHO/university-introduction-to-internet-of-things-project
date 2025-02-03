@@ -1,0 +1,11 @@
+{
+    "rooms": [
+        {
+            "name": "Room_1",
+            "facilities": {
+                "videoprojector": true,
+                "seating_capacity": 86
+            }
+        }
+    ]
+}

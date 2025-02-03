@@ -1,22 +1,551 @@
 = IoT Project: Room Selection Decision Support System
 Gabriel Ny aintsoa Leclerc; Karyna Ouahrani; Noah Pierre Biewesch; Steve Meireles Lopes
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+1]
+== Protocols
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+2]
+[frame=none, grid=rows]
+|===
+| Entity | Protocol
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+1]
+| Arduino | MQTT
+| Sensors | I2C
+| Room Facilities | REST API over HTTP
+| Shared Agenda | REST API over HTTP
+| User Preferences | REST API over HTTP
+|===
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+2]
+== Database
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+1]
+=== !
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+2]
+----
+include::{root}/partials/application/assets/air_quality_sensor_data.json[]
+----
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+1]
+----
+include::{root}/partials/application/assets/room_facilities_data.json[]
+----
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+2]
+=== !
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+1]
+----
+include::{root}/partials/application/application-mongo-local.nix[]
+----
 
-include::{root}/partials/lorem_ipsum.adoc[leveloffset=+2]
+----
+nix build .#application-mongo-local
+docker load <result
+----
+
+----
+docker run --name mongodb -p 27017:27017 -v "$MONGO_DB:/data/db" mongo
+----
+
+=== !
+
+----
+include::{root}/partials/application/docker-compose.yml[lines=2..16]
+----
+
+----
+docker-compose up --build
+----
+
+== Criteria
+
+=== !
+
+[cols=",^,>", frame=none, grid=rows]
+|===
+| Criterion       | Unit    | Threshold
+
+| PM~2.5~         | µg/m^3^ | 25
+| PM~10~          | µg/m^3^ | 50
+| CO~2~           | ppm     | 1000
+| Humidity        | %       | 40--60
+| Light Intensity | lux     | 500
+|===
+
+=== !
+
+[cols=",^,>", frame=none, grid=rows]
+|===
+| Criterion       | Unit    | Threshold
+
+| Sound Levels    | dB      | 70
+| Temperature     | °C      | 15--28
+| VOC             | µg/m^3^ | 1000
+|===
+
+== Algorithm
+
+[%auto-animate]
+=== !
+
+[,js,data-id=computeAHPWeights]
+----
+function computeAHPWeights(userWeights) {
+  let criteria = Object.keys(userWeights);
+  let n = criteria.length;
+  let matrix = [];
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=computeAHPWeights]
+----
+function computeAHPWeights(userWeights) {
+  for (let i = 0; i < n; i++) {
+    matrix[i] = [];
+
+    for (let j = 0; j < n; j++) {
+      matrix[i][j] = userWeights[criteria[i]] /
+                     userWeights[criteria[j]];
+    }
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=computeAHPWeights]
+----
+function computeAHPWeights(userWeights) {
+  let geoMeans = [];
+
+  for (let i = 0; i < n; i++) {
+    let product = 1;
+
+    for (let j = 0; j < n; j++) {
+      product *= matrix[i][j];
+    }
+
+    geoMeans[i] = Math.pow(product, 1/n);
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=computeAHPWeights]
+----
+function computeAHPWeights(userWeights) {
+  let sumGeo = geoMeans.reduce((sum, val) => sum + val, 0);
+  let normalizedWeights = {};
+
+  for (let i = 0; i < n; i++) {
+    normalizedWeights[criteria[i]] = geoMeans[i] / sumGeo;
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=computeAHPWeights]
+----
+function computeAHPWeights(userWeights) {
+  return normalizedWeights;
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=meetsThreshold]
+----
+function meetsThreshold(room) {
+  const {
+    Air_Quality,
+    CO2,
+    Humidity,
+    Light_Intensity,
+    Sound,
+    Temperature,
+    VOC
+  } = room;
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=meetsThreshold]
+----
+function meetsThreshold(room) {
+  const pm25 = Air_Quality?.["PM2.5"];
+  const pm10 = Air_Quality?.PM10;
+  const co2 = CO2?.co2_level;
+  const humidity = Humidity?.humidity;
+  const light = Light_Intensity?.light_intensity;
+  const sound = Sound?.sound_level;
+  const temperature = Temperature?.temperature;
+  const voc = VOC?.VOC_level;
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=meetsThreshold]
+----
+function meetsThreshold(room) {
+  return (
+    (pm25 !== undefined && pm25 <= 25) &&
+    (pm10 !== undefined && pm10 <= 50) &&
+    (co2 !== undefined && co2 <= 1000) &&
+    (humidity !== undefined &&
+      humidity >= 40 && humidity <= 60) &&
+    (light !== undefined && light <= 500) &&
+    (sound !== undefined && sound <= 70) &&
+    (temperature !== undefined &&
+      temperature >= 15 && temperature <= 28) &&
+    (voc !== undefined && voc <= 1000)
+  );
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  const API_URL = "http://localhost:8087";
+  const rankButton = document.getElementById("rank-button");
+
+  rankButton.disabled = true;
+
+  rankButton.classList.add(
+    'opacity-50', 'cursor-not-allowed'
+  );
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  try {
+    // TODO: Implement core logic.
+  } catch(error) {
+      console.error(error);
+      alert("Unable to process room ranking");
+  } finally {
+    rankButton.disabled = false;
+
+    rankButton.classList.remove(
+      'opacity-50', 'cursor-not-allowed'
+    );
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  // TODO: Implement core logic.
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let desiredTemp = parseFloat(
+    document.getElementById("desired_temp").value
+  );
+
+  let desiredHumidity = parseFloat(
+    document.getElementById("desired_humidity").value
+  );
+
+  let desiredLight = parseFloat(
+    document.getElementById("desired_light").value
+  );
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let desiredAQI = parseFloat(
+    document.getElementById("desired_aqi").value
+  );
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  if (
+    desiredTemp < 15 || desiredTemp > 28 ||
+    desiredHumidity < 40 || desiredHumidity > 60 ||
+    desiredLight > 500 ||
+    desiredAQI > 50
+  ) {
+    return;
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let roomNames = await fetch(
+    `${API_URL}/RoomList/Names`
+  ).then(res => res.json());
+
+  let roomsData = [];
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  for (let room of roomNames) {
+    let roomData = await fetch(
+      `${API_URL}/Rooms/Last/${room}`
+    ).then(res => res.json());
+
+    roomsData.push(roomData);
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let filteredRooms = roomsData.filter(meetsThreshold);
+
+  // If no room meets thresholds, notify the user.
+  if (filteredRooms.length === 0) {
+    let list = document.getElementById("room-list");
+    list.innerHTML = /* No room available */;
+    return;
+  }
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let userWeights = {
+    temperature: weightTemp,
+    humidity: weightHumidity,
+    light: weightLight,
+    air_quality: weightAQI
+  };
+
+  let criteriaWeights = computeAHPWeights(userWeights);
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let minMax = {};
+  ["temperature", "humidity", "light", "air_quality"
+  ].forEach(key => {
+    minMax[key] = {
+      min: Math.min(
+        ...filteredRooms.map(r => extractValue(r, key))
+      ),
+      max: Math.max(
+        ...filteredRooms.map(r => extractValue(r, key))
+      )
+    };
+  });
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  filteredRooms.forEach(room => {
+    room.normalized = {
+      temperature: normalize(room, "temperature", minMax),
+      humidity: normalize(room, "humidity", minMax),
+      light: normalize(room, "light", minMax),
+      air_quality: normalize(room, "air_quality", minMax)
+    };
+  });
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  filteredRooms.forEach(room => {
+    room.ahpScore =
+      room.normalized.temperature *
+      criteriaWeights.temperature +
+      room.normalized.humidity *
+      criteriaWeights.humidity +
+      room.normalized.light *
+      criteriaWeights.light +
+      room.normalized.air_quality *
+      criteriaWeights.air_quality;
+  });
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  filteredRooms.sort((a, b) => b.ahpScore - a.ahpScore);
+}
+----
+
+[%auto-animate]
+=== !
+
+[,js,data-id=fetchAndRankRooms]
+----
+async function fetchAndRankRooms() {
+  let list = document.getElementById("room-list");
+  list.innerHTML = "";
+
+  filteredRooms.forEach((room, index) => {
+    // Generate valid HTML.
+    list.innerHTML += /*
+      Temp: ${}°C
+      Humidity: ${}%
+      Light: ${} lux
+      AQ (PM10): ${}
+    */;
+  });
+}
+----
+
+== REST APIs
+
+[.stretch]
+image::{root}/images/swagger.png[align=center]
+
+== UIs
+
+----
+docker-compose up --build
+----
+
+----
+xdg-open localhost:8087/ui
+xdg-open localhost:8080
+----
+
+=== !
+
+[.stretch]
+video::{root}/assets/demo.mp4[]
+
+== Contributions
+
+=== !
+
+.Research
+[center, cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| Protocols       | X       | X      | X    | X
+| Criteria        |         |        | X    |
+|===
+
+.Hardware
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| Arduino         | X       | X      |      |
+|===
+
+=== !
+
+.Backend
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| Docker          | X       | X      | X    | X
+| Algorithm       |         |        |      | X
+| REST            | X       |        |      |
+| MQTT            | X       |        |      |
+|===
+
+=== !
+
+.Frontend
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| UIs             |         | X      |      | X
+|===
+
+.Documentation
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| Report          |         |        | X    |
+| Slides          |         |        | X    |
+|===
+
+=== !
+
+.Miscellaneous
+[cols=",^,^,^,^", frame=none, grid=rows]
+|===
+| Task            | Gabriel | Karyna | Noah | Steve
+
+| General Support |         |        | X    | X
+|===
+
+== Source Code
+
+[.center]
+https://github.com/trueNAHO/university-introduction-to-internet-of-things-project
+
+== Thanks for listening

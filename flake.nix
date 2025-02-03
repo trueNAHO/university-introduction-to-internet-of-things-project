@@ -128,7 +128,13 @@
             )
           )
 
-          (mkOutputs "presentation" {})
+          (
+            mkOutputs "presentation" {
+              packages.commandOptions.attribute = [
+                "source-highlighter=highlight.js"
+              ];
+            }
+          )
 
           (
             mkOutputs "report" {
