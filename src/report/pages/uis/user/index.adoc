@@ -1,1 +1,58 @@
 = User
+
+To launch the bare-bone Swagger server, run the following command inside
+`/src/application/src/api`:
+
+----
+docker build -t swagger_server .
+docker run -p 8087:8087 swagger_server
+----
+
+Alternatively, to launch the full Docker container production suite, run the
+following command inside `/src/application/`. However, the `mqtt-serial`
+container requires the Arduino to be accessible on `/dev/ttyACM0`:
+
+----
+docker-compose up --build
+----
+
+Either way, to view the Swagger documentation, run:
+
+----
+xdg-open localhost:8087/ui
+----
+
+Then, the following entries are visible:
+
+.Swagger UI
+image::{root}/images/swagger.png[width=100%]
+
+For example, the GET request to the `/CO2/\{room_name}` endpoint is documented
+as follows:
+
+.Swagger UI (GET `/CO2/\{room_name}`)
+image::{root}/images/swagger_co2_get.png[width=100%]
+
+To view the _Room Selection Decision Support System_ after starting the Docker
+Compose containers, run:
+
+----
+xdg-open localhost:8080
+----
+
+Then, the following greeting screen is visible:
+
+.Room Selection Decision Support System
+image::{root}/images/room_selection_decision_support_system.png[width=100%]
+
+Finding the best rooms according to user preferences and the <<Criteria,
+criteria>>, should look something like:
+
+.Room Selection System (Success)
+image::{root}/images/room_selection_system_success.png[width=100%]
+
+If the <<Criteria, criteria>> are not satisfied, something like the following
+error message should be visible:
+
+.Room Selection System (Fail)
+image::{root}/images/room_selection_system_fail.png[width=100%]
