@@ -17,3 +17,11 @@ On startup, the container runs all scripts inside
 ----
 include::{root}/partials/application/import-data.sh[]
 ----
+
+Alternatively, to launch the full Docker container production suite, run the
+following command inside `/src/application/`. However, the `mqtt-serial`
+container requires the Arduino to be accessible on `/dev/ttyACM0`:
+
+----
+docker-compose up --build
+----
