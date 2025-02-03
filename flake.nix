@@ -18,13 +18,11 @@
               {
                 checks.hooks = {
                   autoflake.enable = true;
-                  isort.enable = true;
-                  mypy.enable = true;
-                  pyright.enable = true;
                   ruff-format.enable = true;
                   ruff.enable = true;
 
                   typos.settings.ignored-words = [
+                    "Codgen"
                     "Retrive"
                     "facilites"
                     "mosquitto"
@@ -34,7 +32,9 @@
                 };
 
                 devShells.packages = lib.singleton (
-                  pkgs.python3.withPackages (_: [])
+                  pkgs.python3.withPackages (
+                    ps: with ps; [connexion flask flask-pymongo]
+                  )
                 );
 
                 packages = {

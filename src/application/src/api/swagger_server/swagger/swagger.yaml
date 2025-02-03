@@ -1,0 +1,1150 @@
+openapi: 3.0.0
+info:
+  title: Project API
+  description: API for managing sensors in rooms.
+  version: 0.0.1
+servers:
+- url: http://localhost:8087
+  description: Testing server
+paths:
+  /RoomList:
+    get:
+      summary: Retrive a list of room
+      description: "Returns a list of all rooms, each including their associated details."
+      operationId: room_list_get
+      responses:
+        "200":
+          description: A JSON array of room names with their sensor values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new AirQualityRoom
+      description: Adds a new Room with empty data.
+      operationId: room_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: Name of the room to be created
+              example: Room_1
+        required: true
+      responses:
+        "201":
+          description: Room successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_201"
+        "404":
+          description: Room already exist for the specified name
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Rooms/{room_name}:
+    get:
+      summary: Retrive a list of room
+      description: "Returns a list of all rooms, each including their associated details."
+      operationId: rooms_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: name of the room that needs to be fetched
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of room names with their sensor values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    put:
+      summary: Update room name
+      description: Updates the name of an existing room.
+      operationId: rooms_room_name_put
+      parameters:
+      - name: room_name
+        in: path
+        description: Current name of the room that needs to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: New name of the room
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: Room name updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_1"
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    delete:
+      summary: Delete a Room
+      description: Removes a Room from the room’s record.
+      operationId: rooms_room_name_delete
+      parameters:
+      - name: room_name
+        in: path
+        description: name of the room that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Room successfully deleted
+        "404":
+          description: Room not found for the specified name
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Rooms/Last/{room_name}:
+    get:
+      summary: Retrieve the last sensor values of a room
+      description: Returns the most recent sensor values for a specific room.
+      operationId: rooms_last_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Latest sensor readings for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_2"
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /RoomList/Names:
+    get:
+      summary: Retrieve a list of all room names
+      description: Returns a list of all existing room names from the sensor collections.
+      operationId: room_list_names_get
+      responses:
+        "200":
+          description: A JSON array of room names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: Room_1
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Air_Quality/{room_name}:
+    get:
+      summary: Retrieve air quality of a room
+      description: Returns a list of all air quality values for a specific room.
+      operationId: air_quality_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve air quality data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of air quality values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_3"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new air quality value to a room
+      description: Adds a new air quality value for the specified room.
+      operationId: air_quality_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add air quality data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AirQualityValue"
+        required: true
+      responses:
+        "201":
+          description: Air quality value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /CO2/{room_name}:
+    get:
+      summary: Retrieve CO2 levels of a room
+      description: Returns a list of all CO2 level values for a specific room.
+      operationId: c_o2_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve CO2 level data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of CO2 level values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_4"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new CO2 level value to a room
+      description: Adds a new CO2 level value for the specified room.
+      operationId: c_o2_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add CO2 level data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CO2Value"
+        required: true
+      responses:
+        "201":
+          description: CO2 level value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Humidity/{room_name}:
+    get:
+      summary: Retrieve humidity levels of a room
+      description: Returns a list of all humidity level values for a specific room.
+      operationId: humidity_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve humidity level data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of humidity level values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_5"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new humidity level value to a room
+      description: Adds a new humidity level value for the specified room.
+      operationId: humidity_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add humidity level data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HumidityValue"
+        required: true
+      responses:
+        "201":
+          description: Humidity level value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Light_Intensity/{room_name}:
+    get:
+      summary: Retrieve light intensity levels of a room
+      description: Returns a list of all light intensity values for a specific room.
+      operationId: light_intensity_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve light intensity data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of light intensity values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_6"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new light intensity value to a room
+      description: Adds a new light intensity value for the specified room.
+      operationId: light_intensity_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add light intensity data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LightIntensityValue"
+        required: true
+      responses:
+        "201":
+          description: Light intensity value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Sound/{room_name}:
+    get:
+      summary: Retrieve sound levels of a room
+      description: Returns a list of all sound level values for a specific room.
+      operationId: sound_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve sound level data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of sound level values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_7"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new sound level value to a room
+      description: Adds a new sound level value for the specified room.
+      operationId: sound_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add sound level data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SoundValue"
+        required: true
+      responses:
+        "201":
+          description: Sound level value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Temperature/{room_name}:
+    get:
+      summary: Retrieve temperature of a room
+      description: Returns a list of all temperature values for a specific room.
+      operationId: temperature_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve temperature data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of temperature values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_8"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new temperature value to a room
+      description: Adds a new temperature value for the specified room.
+      operationId: temperature_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add temperature data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemperatureValue"
+        required: true
+      responses:
+        "201":
+          description: Temperature value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /VOC/{room_name}:
+    get:
+      summary: Retrieve VOC levels of a room
+      description: Returns a list of all VOC levels for a specific room.
+      operationId: v_oc_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve VOC data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON array of VOC values for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_9"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    post:
+      summary: Add a new VOC value to a room
+      description: Adds a new VOC value for the specified room.
+      operationId: v_oc_room_name_post
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to add VOC data to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VOCValue"
+        required: true
+      responses:
+        "201":
+          description: VOC value successfully added to the room
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /Room_Facilities/{room_name}:
+    get:
+      summary: Retrieve room facilities of a room
+      description: Returns a list of all room facilities for a specific room.
+      operationId: room_facilities_room_name_get
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to retrieve facilities data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A JSON object of room facilities for the specified room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_10"
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+    put:
+      summary: Update room facilities
+      description: Updates the facilities of a specific room. Allows adding new facilities
+        or modifying existing ones.
+      operationId: room_facilities_room_name_put
+      parameters:
+      - name: room_name
+        in: path
+        description: Name of the room to update facilities for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomFacilities"
+        required: true
+      responses:
+        "200":
+          description: Room facilities updated successfully
+        "400":
+          description: Invalid input
+        "404":
+          description: Room not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components:
+  schemas:
+    AirQualityValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the air quality reading
+          format: date-time
+        PM2.5:
+          type: number
+          description: Concentration of PM2.5 particles in the air
+          format: float
+          example: 2.35
+        PM10:
+          type: number
+          description: Concentration of PM10 particles in the air
+          format: float
+          example: 11.13
+      example:
+        PM2.5: 2.35
+        PM10: 11.13
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    AirQualityRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        air_quality_data:
+          type: array
+          description: Air quality data for a specific room
+          items:
+            $ref: "#/components/schemas/AirQualityValue"
+    CO2Value:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the CO2 level reading
+          format: date-time
+        co2_level:
+          type: number
+          description: Concentration of CO2 level in the room
+          format: float
+          example: 434.13
+      example:
+        co2_level: 434.13
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    CO2Room:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        co2_values:
+          type: array
+          description: CO2 level readings for a specific room
+          items:
+            $ref: "#/components/schemas/CO2Value"
+    HumidityValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the humidity reading
+          format: date-time
+        humidity:
+          type: number
+          description: Humidity level in percentage
+          format: float
+          example: 65.61
+      example:
+        humidity: 65.61
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    HumidityRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        humidity_values:
+          type: array
+          description: Humidity readings for a specific room
+          items:
+            $ref: "#/components/schemas/HumidityValue"
+    LightIntensityValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the light intensity reading
+          format: date-time
+        light_intensity:
+          type: number
+          description: Light intensity in a room
+          format: float
+          example: 174.34
+      example:
+        light_intensity: 174.34
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    LightIntensityRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        light_intensity_values:
+          type: array
+          description: Light intensity readings for a specific room
+          items:
+            $ref: "#/components/schemas/LightIntensityValue"
+    SoundValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the sound level reading
+          format: date-time
+        sound_level:
+          type: number
+          description: Sound level in decibels (dB)
+          format: float
+          example: 40.37
+      example:
+        sound_level: 40.37
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    SoundRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        sound_values:
+          type: array
+          description: Sound level readings for a specific room
+          items:
+            $ref: "#/components/schemas/SoundValue"
+    TemperatureValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the temperature reading
+          format: date-time
+        temperature:
+          type: number
+          description: Temperature in degrees Celsius
+          format: float
+          example: 27.32
+      example:
+        temperature: 27.32
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    TemperatureRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        temperature_values:
+          type: array
+          description: Temperature readings for a specific room
+          items:
+            $ref: "#/components/schemas/TemperatureValue"
+    VOCValue:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the VOC level reading
+          format: date-time
+        VOC_level:
+          type: number
+          description: VOC concentration in the air
+          format: float
+          example: 436.65
+      example:
+        VOC_level: 436.65
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    VOCRoom:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        voc_values:
+          type: array
+          description: VOC level readings for a specific room
+          items:
+            $ref: "#/components/schemas/VOCValue"
+    RoomFacilities:
+      type: object
+      properties:
+        videoprojector:
+          type: boolean
+          description: Indicates whether the room has a videoprojector
+          example: true
+        seating_capacity:
+          type: integer
+          description: Seating capacity of the room
+          example: 62
+        computers:
+          type: integer
+          description: Number of computers available in the room
+          example: 20
+        robots_for_training:
+          type: integer
+          description: Number of robots available for training in the room
+          example: 10
+      example:
+        seating_capacity: 62
+        videoprojector: true
+        robots_for_training: 10
+        computers: 20
+    FacilityRooms:
+      type: object
+      properties:
+        rooms:
+          type: array
+          description: List of rooms with their facilities
+          items:
+            $ref: "#/components/schemas/FacilityRooms_rooms"
+    inline_response_200:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        Air_Quality:
+          $ref: "#/components/schemas/AirQualityValue"
+        CO2:
+          $ref: "#/components/schemas/CO2Value"
+        Humidity:
+          $ref: "#/components/schemas/HumidityValue"
+        Light_Intensity:
+          $ref: "#/components/schemas/LightIntensityValue"
+        Sound:
+          $ref: "#/components/schemas/SoundValue"
+        Temperature:
+          $ref: "#/components/schemas/TemperatureValue"
+        VOC:
+          $ref: "#/components/schemas/VOCValue"
+        Room_facilites:
+          $ref: "#/components/schemas/RoomFacilities"
+      example:
+        Room_facilites:
+          seating_capacity: 62
+          videoprojector: true
+          robots_for_training: 10
+          computers: 20
+        Temperature:
+          temperature: 27.32
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        CO2:
+          co2_level: 434.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Humidity:
+          humidity: 65.61
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        name: Room_1
+        Air_Quality:
+          PM2.5: 2.35
+          PM10: 11.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Sound:
+          sound_level: 40.37
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        VOC:
+          VOC_level: 436.65
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Light_Intensity:
+          light_intensity: 174.34
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_201:
+      type: object
+      properties:
+        room:
+          $ref: "#/components/schemas/inline_response_201_room"
+      example:
+        room:
+          Temperature_Data: []
+          Air_Quality_Data: []
+          Room_facilites_Data: []
+          Light_Intensity_Data: []
+          name: Room_1
+          Sound_Data: []
+          CO2_Data: []
+          VOC_Data: []
+          Humidity_Data: []
+    inline_response_200_1:
+      type: object
+      properties:
+        old_name:
+          type: string
+          example: Old_Room_Name
+        updated_name:
+          type: string
+          example: Updated_Room_Name
+      example:
+        updated_name: Updated_Room_Name
+        old_name: Old_Room_Name
+    inline_response_200_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        Air_Quality:
+          $ref: "#/components/schemas/AirQualityValue"
+        CO2:
+          $ref: "#/components/schemas/CO2Value"
+        Humidity:
+          $ref: "#/components/schemas/HumidityValue"
+        Light_Intensity:
+          $ref: "#/components/schemas/LightIntensityValue"
+        Sound:
+          $ref: "#/components/schemas/SoundValue"
+        Temperature:
+          $ref: "#/components/schemas/TemperatureValue"
+        VOC:
+          $ref: "#/components/schemas/VOCValue"
+        Room_facilities:
+          $ref: "#/components/schemas/RoomFacilities"
+      example:
+        Temperature:
+          temperature: 27.32
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Room_facilities:
+          seating_capacity: 62
+          videoprojector: true
+          robots_for_training: 10
+          computers: 20
+        CO2:
+          co2_level: 434.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Humidity:
+          humidity: 65.61
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        name: Room_1
+        Air_Quality:
+          PM2.5: 2.35
+          PM10: 11.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Sound:
+          sound_level: 40.37
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        VOC:
+          VOC_level: 436.65
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        Light_Intensity:
+          light_intensity: 174.34
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_3:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        air_quality_data:
+          type: array
+          description: List of air quality values for the room
+          items:
+            $ref: "#/components/schemas/AirQualityValue"
+      example:
+        room_name: Room_1
+        air_quality_data:
+        - PM2.5: 2.35
+          PM10: 11.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - PM2.5: 2.35
+          PM10: 11.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_4:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        co2_data:
+          type: array
+          description: List of CO2 level values for the room
+          items:
+            $ref: "#/components/schemas/CO2Value"
+      example:
+        room_name: Room_1
+        co2_data:
+        - co2_level: 434.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - co2_level: 434.13
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_5:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        humidity_data:
+          type: array
+          description: List of humidity level values for the room
+          items:
+            $ref: "#/components/schemas/HumidityValue"
+      example:
+        room_name: Room_1
+        humidity_data:
+        - humidity: 65.61
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - humidity: 65.61
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_6:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        light_intensity_data:
+          type: array
+          description: List of light intensity values for the room
+          items:
+            $ref: "#/components/schemas/LightIntensityValue"
+      example:
+        room_name: Room_1
+        light_intensity_data:
+        - light_intensity: 174.34
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - light_intensity: 174.34
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_7:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        sound_data:
+          type: array
+          description: List of sound level values for the room
+          items:
+            $ref: "#/components/schemas/SoundValue"
+      example:
+        room_name: Room_1
+        sound_data:
+        - sound_level: 40.37
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - sound_level: 40.37
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_8:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        temperature_data:
+          type: array
+          description: List of temperature values for the room
+          items:
+            $ref: "#/components/schemas/TemperatureValue"
+      example:
+        room_name: Room_1
+        temperature_data:
+        - temperature: 27.32
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - temperature: 27.32
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_9:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        voc_data:
+          type: array
+          description: List of VOC values for the room
+          items:
+            $ref: "#/components/schemas/VOCValue"
+      example:
+        room_name: Room_1
+        voc_data:
+        - VOC_level: 436.65
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - VOC_level: 436.65
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    inline_response_200_10:
+      type: object
+      properties:
+        room_name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        room_facilities:
+          $ref: "#/components/schemas/RoomFacilities"
+      example:
+        room_name: Room_1
+        room_facilities:
+          seating_capacity: 62
+          videoprojector: true
+          robots_for_training: 10
+          computers: 20
+    FacilityRooms_rooms:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        facilities:
+          $ref: "#/components/schemas/RoomFacilities"
+    inline_response_201_room:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+          example: Room_1
+        Air_Quality_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/AirQualityValue"
+        CO2_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/CO2Value"
+        Humidity_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/HumidityValue"
+        Light_Intensity_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/LightIntensityValue"
+        Sound_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/SoundValue"
+        Temperature_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/TemperatureValue"
+        VOC_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/VOCValue"
+        Room_facilites_Data:
+          type: array
+          example: []
+          items:
+            $ref: "#/components/schemas/RoomFacilities"
+      example:
+        Temperature_Data: []
+        Air_Quality_Data: []
+        Room_facilites_Data: []
+        Light_Intensity_Data: []
+        name: Room_1
+        Sound_Data: []
+        CO2_Data: []
+        VOC_Data: []
+        Humidity_Data: []
+

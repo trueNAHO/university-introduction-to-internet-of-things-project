@@ -80646,7 +80646,7 @@
                 },
                 {
                     "timestamp": "2024-11-05T06:47:42.987448",
-                    "light_intensity": 991.62
+                    "light_intensity": 300.62
                 }
             ]
         },
@@ -201621,7 +201621,7 @@
                 },
                 {
                     "timestamp": "2024-11-05T06:47:42.987448",
-                    "light_intensity": 885.91
+                    "light_intensity": 200.91
                 }
             ]
         }
