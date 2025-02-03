@@ -1,1 +1,20 @@
 = Algorithm
+
+The AHP weights are computed as follows:
+
+----
+include::{root}/partials/application/frontend.html[indent=0, lines=112..145]
+----
+
+The <<Criteria, criteria>> are verified as follows:
+
+----
+include::{root}/partials/application/frontend.html[indent=0, lines=147..166]
+----
+
+The following `async fetchAndRankRooms` function is executed when pressing on
+the <<User, "Rank Rooms" button>>:
+
+----
+include::{root}/partials/application/frontend.html[indent=0, lines=168..302]
+----

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Room Selection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
+
+    <title>Room Selection System</title>
+
+    <div id="intro-page" class="text-center w-full max-w-6xl bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-5xl font-bold mb-6">Room Selection Decision Support System</h1>
+        <div class="flex border-b mb-4">
+            <button onclick="showTab('room-selection')" class="tab-button px-4 py-2 text-lg font-bold bg-blue-500 text-white">Room Selection</button>
+            <button onclick="showTab('swagger-docs')" class="tab-button px-4 py-2 text-lg font-bold bg-gray-300">API Documentation</button>
+        </div>
+        <div id="room-selection" class="tab-content p-4">
+            <button onclick="showSelectionPage()" class="px-6 py-3 bg-blue-500 text-white text-xl rounded">Select Room</button>
+        </div>
+        <div id="swagger-docs" class="tab-content p-4 hidden">
+            <h1 class="text-2xl font-bold mb-4">API Documentation</h1>
+            <iframe src="/swagger" class="w-full h-96 border rounded"></iframe>
+        </div>
+    </div>
+
+
+    <div id="selection-page" class="hidden w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Room Selection System</h1>
+        <button onclick="goBack()" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded">Back</button>
+        <div class="flex gap-6">
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Set Preferences</h2>
+                <label>Temperature Importance: <input type="number" id="temp_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Humidity Importance: <input type="number" id="humidity_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Light Importance: <input type="number" id="light_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+                <label>Air Quality Importance: <input type="number" id="aqi_importance" min="1" max="9" value="5" class="border p-1 rounded w-full"></label>
+            </div>
+            
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Desired Room Profile</h2>
+                <label>Temperature (°C): <input type="number" id="desired_temp" value="22" class="border p-1 rounded w-full"></label>
+                <label>Humidity (%): <input type="number" id="desired_humidity" value="50" class="border p-1 rounded w-full"></label>
+                <label>Light (lux): <input type="number" id="desired_light" value="300" class="border p-1 rounded w-full"></label>
+                <label>AQI: <input type="number" id="desired_aqi" value="50" class="border p-1 rounded w-full"></label>
+            </div>
+            
+            <div class="w-1/3">
+                <h2 class="text-xl font-semibold">Facility Preferences</h2>
+                <label>Seating Capacity: <input type="number" id="min_seating" value="10" class="border p-1 rounded w-full"></label>
+                <label>Computers Needed: <input type="number" id="min_computers" value="0" class="border p-1 rounded w-full"></label>
+                <label>Robots Needed: <input type="number" id="min_robots" value="0" class="border p-1 rounded w-full"></label>
+                <label>Videoprojector: <input type="checkbox" id="require_videoprojector"></label>
+            </div>
+        </div>
+
+        <button id="rank-button" onclick="fetchAndRankRooms()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded">Rank Rooms</button>
+        <ul id="room-list" class="mt-5"></ul>
+        <button id="change-button" onclick="showSelectionPage()" class="hidden mt-4 px-4 py-2 bg-gray-500 text-white rounded">Change Preferences</button>
+    </div>
+
+
+    <script>
+		const API_URL = "http://localhost:8087";
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.replace('bg-blue-500', 'bg-gray-300'));
+            event.target.classList.replace('bg-gray-300', 'bg-blue-500');
+        }
+        function goBack() {
+            document.getElementById("selection-page").classList.add("hidden");
+            document.getElementById("intro-page").classList.remove("hidden");
+        }
+        function showSelectionPage() {
+            document.getElementById("intro-page").classList.add("hidden");
+            document.getElementById("selection-page").classList.remove("hidden");
+        }
+
+        			
+		function extractValue(room, key) {
+		  switch (key) {
+		    case "temperature":
+		      return room.Temperature ? room.Temperature.temperature : 0;
+		    case "humidity":
+		      return room.Humidity ? room.Humidity.humidity : 0;
+		    case "light":
+		      return room.Light_Intensity ? room.Light_Intensity.light_intensity : 0;
+		    case "air_quality":
+		      // For normalization purposes we use PM10 (the threshold for PM10 is 50 µg/m³)
+		      return room.Air_Quality ? room.Air_Quality.PM10 : 0;
+		    default:
+		      return 0;
+		  }
+		}
+		
+		// Helper: Normalize a room's criterion value using the min and max values.
+		function normalize(room, key, minMax) {
+		  let value = extractValue(room, key);
+		  let min = minMax[key].min;
+		  let max = minMax[key].max;
+		  if (max - min === 0) return 0; // Avoid division by zero.
+		  return (value - min) / (max - min);
+		}
+		
+		// Helper: Compute AHP criteria weights using the geometric mean method.
+		// The user inputs (weights) are used to build a pairwise comparison matrix.
+		function computeAHPWeights(userWeights) {
+		  let criteria = Object.keys(userWeights);
+		  let n = criteria.length;
+		  let matrix = [];
+		  
+		  // Build pairwise comparison matrix
+		  for (let i = 0; i < n; i++) {
+		    matrix[i] = [];
+		    for (let j = 0; j < n; j++) {
+		      matrix[i][j] = userWeights[criteria[i]] / userWeights[criteria[j]];
+		    }
+		  }
+		  
+		  // Compute the geometric mean for each row.
+		  let geoMeans = [];
+		  for (let i = 0; i < n; i++) {
+		    let product = 1;
+		    for (let j = 0; j < n; j++) {
+		      product *= matrix[i][j];
+		    }
+		    geoMeans[i] = Math.pow(product, 1/n);
+		  }
+		  
+		  // Normalize the geometric means to sum to 1.
+		  let sumGeo = geoMeans.reduce((sum, val) => sum + val, 0);
+		  let normalizedWeights = {};
+		  for (let i = 0; i < n; i++) {
+		    normalizedWeights[criteria[i]] = geoMeans[i] / sumGeo;
+		  }
+		  
+		  return normalizedWeights;
+		}
+		
+		// Helper: Check if a room meets all the threshold criteria.
+		function meetsThreshold(room) {
+		  const pm25 = room.Air_Quality ? room.Air_Quality["PM2.5"] : undefined;
+		  const pm10 = room.Air_Quality ? room.Air_Quality.PM10 : undefined;
+		  const co2 = room.CO2 ? room.CO2.co2_level : undefined;
+		  const humidity = room.Humidity ? room.Humidity.humidity : undefined;
+		  const light = room.Light_Intensity ? room.Light_Intensity.light_intensity : undefined;
+		  const sound = room.Sound ? room.Sound.sound_level : undefined;
+		  const temperature = room.Temperature ? room.Temperature.temperature : undefined;
+		  const voc = room.VOC ? room.VOC.VOC_level : undefined;
+		  
+		  return (pm25 !== undefined && pm25 <= 25) &&
+		         (pm10 !== undefined && pm10 <= 50) &&
+		         (co2 !== undefined && co2 <= 1000) &&
+		         (humidity !== undefined && humidity >= 40 && humidity <= 60) &&
+		         (light !== undefined && light <= 500) &&
+		         (sound !== undefined && sound <= 70) &&
+		         (temperature !== undefined && temperature >= 15 && temperature <= 28) &&
+		         (voc !== undefined && voc <= 1000);
+		}
+		
+		// Main function using AHP to rank rooms.
+		async function fetchAndRankRooms() {
+		  const API_URL = "http://localhost:8087";
+
+		  const rankButton = document.getElementById("rank-button");
+		  rankButton.disabled = true;
+		  rankButton.classList.add('opacity-50', 'cursor-not-allowed');
+		  
+		  // ***** 1. Validate User Inputs on the Desired Room Profile *****
+		  // (Assuming you have these input fields in your HTML.)
+		  try {
+		  	let desiredTemp = parseFloat(document.getElementById("desired_temp").value);
+		  	let desiredHumidity = parseFloat(document.getElementById("desired_humidity").value);
+		  	let desiredLight = parseFloat(document.getElementById("desired_light").value);
+		  	let desiredAQI = parseFloat(document.getElementById("desired_aqi").value); // for PM10
+		  	
+		  	if (desiredTemp < 15 || desiredTemp > 28) {
+		  	  alert("Desired temperature must be between 15°C and 28°C.");
+		  	  return;
+		  	}
+		  	if (desiredHumidity < 40 || desiredHumidity > 60) {
+		  	  alert("Desired humidity must be between 40% and 60%.");
+		  	  return;
+		  	}
+		  	if (desiredLight > 500) {
+		  	  alert("Desired light intensity must be not more than 500 lux.");
+		  	  return;
+		  	}
+		  	if (desiredAQI > 50) { // PM10 threshold
+		  	  alert("Desired Air Quality (PM10) must be 50 µg/m³ or less.");
+		  	  return;
+		  	}
+		  	
+		  	// ***** 2. Validate the User's Importance Weights *****
+		  	let weightTemp = parseInt(document.getElementById("temp_importance").value);
+		  	let weightHumidity = parseInt(document.getElementById("humidity_importance").value);
+		  	let weightLight = parseInt(document.getElementById("light_importance").value);
+		  	let weightAQI = parseInt(document.getElementById("aqi_importance").value);
+		  	
+		  	if (
+		  	  weightTemp < 1 || weightTemp > 9 ||
+		  	  weightHumidity < 1 || weightHumidity > 9 ||
+		  	  weightLight < 1 || weightLight > 9 ||
+		  	  weightAQI < 1 || weightAQI > 9
+		  	) {
+		  	  alert("Importance values must be between 1 and 9.");
+		  	  return;
+		  	}
+		  	
+		  	// ***** 3. Fetch List of Room Names *****
+		  	let roomNames = await fetch(`${API_URL}/RoomList/Names`).then(res => res.json());
+		  	let roomsData = [];
+		  	
+		  	// ***** 4. Fetch the Latest Data for Each Room *****
+		  	for (let room of roomNames) {
+		  	  let roomData = await fetch(`${API_URL}/Rooms/Last/${room}`).then(res => res.json());
+		  	  roomsData.push(roomData);
+		  	}
+		  	
+		  	// ***** 5. Filter Out Rooms That Do Not Meet the Threshold Requirements *****
+		  	let filteredRooms = roomsData.filter(meetsThreshold);
+		  	
+		  	// If no room meets thresholds, notify the user.
+		  	if (filteredRooms.length === 0) {
+		  	  let list = document.getElementById("room-list");
+		  	  list.innerHTML = "<li class='p-2 border bg-white rounded mb-2 text-red-600'>No recommended rooms available based on the threshold criteria.</li>";
+		  	  return;
+		  	}
+		  	
+		  	// ***** 6. Prepare User Weights for AHP Calculation *****
+		  	let userWeights = {
+		  	  temperature: weightTemp,
+		  	  humidity: weightHumidity,
+		  	  light: weightLight,
+		  	  air_quality: weightAQI
+		  	};
+		  	
+		  	// Compute the AHP criteria weights using the geometric mean method.
+		  	let criteriaWeights = computeAHPWeights(userWeights);
+		  	console.log("AHP Criteria Weights:", criteriaWeights);
+		  	
+		  	// ***** 7. Determine Min/Max Values for Normalization (using filtered rooms) *****
+		  	let minMax = {};
+		  	["temperature", "humidity", "light", "air_quality"].forEach(key => {
+		  	  minMax[key] = {
+		  	    min: Math.min(...filteredRooms.map(r => extractValue(r, key))),
+		  	    max: Math.max(...filteredRooms.map(r => extractValue(r, key)))
+		  	  };
+		  	});
+		  	
+		  	// ***** 8. Normalize Each Room's Performance Values *****
+		  	filteredRooms.forEach(room => {
+		  	  room.normalized = {
+		  	    temperature: normalize(room, "temperature", minMax),
+		  	    humidity: normalize(room, "humidity", minMax),
+		  	    light: normalize(room, "light", minMax),
+		  	    air_quality: normalize(room, "air_quality", minMax)
+		  	  };
+		  	});
+		  	
+		  	// ***** 9. Compute the AHP Score for Each Room *****
+		  	filteredRooms.forEach(room => {
+		  	  room.ahpScore = 
+		  	    room.normalized.temperature * criteriaWeights.temperature +
+		  	    room.normalized.humidity * criteriaWeights.humidity +
+		  	    room.normalized.light * criteriaWeights.light +
+		  	    room.normalized.air_quality * criteriaWeights.air_quality;
+		  	});
+		  	
+		  	// ***** 10. Sort the Rooms by AHP Score (Higher is Better) *****
+		  	filteredRooms.sort((a, b) => b.ahpScore - a.ahpScore);
+		  	
+		  	// ***** 11. Display Results *****
+		  	let list = document.getElementById("room-list");
+		  	list.innerHTML = "";
+		  	filteredRooms.forEach((room, index) => {
+		  	  list.innerHTML += `<li class='p-2 border bg-white rounded mb-2'>
+		  	    <span class='font-bold'>Rank ${index + 1}:</span> ${room.name}
+		  	    <span class='text-gray-600'>
+		  	      | Temp: ${room.Temperature ? room.Temperature.temperature : "N/A"}°C 
+		  	      | Humidity: ${room.Humidity ? room.Humidity.humidity : "N/A"}% 
+		  	      | Light: ${room.Light_Intensity ? room.Light_Intensity.light_intensity : "N/A"} lux 
+		  	      | AQ (PM10): ${room.Air_Quality ? room.Air_Quality.PM10 : "N/A"}
+		  	    </span>
+		  	    <br><span class='text-gray-500'>AHP Score: ${room.ahpScore.toFixed(2)}</span>
+		  	  </li>`;
+		  	});
+		  } catch(error) {
+			  console.error("Error processing room rankings:", error);
+	          alert("An error occurred while processing the room rankings.");
+		  } finally {
+			rankButton.disabled = false;
+	        rankButton.classList.remove('opacity-50', 'cursor-not-allowed');
+		  }
+		}
+	</script>
+</body>
+</html>
